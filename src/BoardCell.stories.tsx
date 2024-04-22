@@ -10,13 +10,13 @@ export default meta;
 type Story = StoryObj<typeof BoardCell>;
 
 export const TheOneWithDefaults: Story = { 
-    render: () => <BoardCell />
+    render: () => <BoardCell id={crypto.randomUUID()}/>
 }; 
 
 export const TheOneWithPlayer1: Story = {
-    render: () => <BoardCell player={1} />
+    render: () => <BoardCell id={crypto.randomUUID()} player={1} />
 }
 
 export const TheOneWithPlayer2: Story = {
-    render: () => <BoardCell player={2} />
+    render: () => <BoardCell id={crypto.randomUUID()} player={2} />
 }

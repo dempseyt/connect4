@@ -2,7 +2,7 @@ import styled from "styled-components"
 
 export type BoardCellProps = {
     player?: 1 | 2,
-    id: string,
+    id?: string,
     className?: string 
 }
 

@@ -1,27 +1,41 @@
-import { BoardCellProps } from "@/BoardCell";
-import { BoardColumn  } from "@/BoardColumn";
-import createCells from "@/create-column-cells"
+import { BoardCell, BoardCellProps } from "@/BoardCell";
+import createCells from "@/create-cells"
 import styled from "styled-components"
 
 type BoardProps = {
     cells: Array<Array<BoardCellProps>>,
-    className?: string
+}
+
+type GridCellProps = {
+    rowIndex: number,
+    columnIndex: number
 }
 
 const StyledBoard = styled.div`
-   display: flex;
-   
+   display: grid;
+   grid-auto-rows: max-content;
+   grid-auto-columns: max-content;
 `
 
-export const Board = ({ cells, className }: BoardProps) => {
-    const numberOfColumns = cells[0].length;
-    let columns = [];
-    for(let i = 0; i < numberOfColumns; i++) {
-        columns.push(<BoardColumn key={i}/>)
-    }
+const GridElement = styled(BoardCell)<GridCellProps>`
+    grid-row-start: ${(props) => props.rowIndex};
+    grid-column-start: ${(props) => props.columnIndex};
+`
+
+
+export const Board = ({ cells }: BoardProps) => {
     return (
-        <StyledBoard className={className}>
-            {columns}
+        <StyledBoard> 
+            {cells.flatMap((row, rowIndex) => 
+                row.map((cell, columnIndex) => 
+                    <GridElement 
+                        key={cell.id}
+                        rowIndex={rowIndex + 1} 
+                        columnIndex={columnIndex + 1} 
+                        player={cell.player} 
+                        id={cell.id}
+                    />)
+            )}
         </StyledBoard>
     )
 } 
