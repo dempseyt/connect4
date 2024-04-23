@@ -20,3 +20,10 @@ export const TheOneWithPlayerOne: Story = {
 export const TheOneWithPlayerTwo: Story = {
     render: () => <Board cells={createCells(6, 7, () => 2)}/>
 }
+
+export const TheOneWithRandomCells: Story = {
+    render: () => <Board cells={createCells(6, 7, () => {
+        let playerOptions: Array<1 | 2 | undefined> = [1,2,undefined]
+        return playerOptions[Math.floor(Math.random() * playerOptions.length - 1)]
+    })}/>
+}
