@@ -2,7 +2,6 @@ import styled from "styled-components"
 
 export type RoundProps = {
     roundNumber: number, 
-
 }
 
 const StyledRoundBanner = styled.div`
