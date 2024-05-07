@@ -7,18 +7,20 @@ describe('to-ascii-table', () => {
       expect(asciiTable).toStrictEqual('')
     })
   })
-  describe('given a 1x1 grid', () => {
-    describe('with 1 column', () => {
+  describe('given a grid with 1 row', () => {
+    describe('and 1 column', () => {
       describe('containing a string', () => {
-        it('and the string is empty', () => {
-          const asciiTable = toAsciiTable([['']])
-          expect(asciiTable).toStrictEqual(`
+        describe('and the string is empty', () => {
+          it('returns a 1x1 ascii table', () => {
+            const asciiTable = toAsciiTable([['']])
+            expect(asciiTable).toStrictEqual(`
 |--|
 |  |
 |--|`)
+          })
         })
         describe('with 1 character in length', () => {
-          it('will return a string representing of the content in the cell', () => {
+          it('returns a 1x1 ascii table', () => {
             const asciiTable = toAsciiTable([['1']])
             expect(asciiTable).toStrictEqual(`
 |---|
@@ -27,23 +29,32 @@ describe('to-ascii-table', () => {
           })
         })
       })
-    })
-    describe('with content greater than 1 character in length', () => {
-      it('returns a 1x1 ascii table', () => {
-        const asciiTable = toAsciiTable([['10']])
-        expect(asciiTable).toEqual(`
+      describe('with content greater than 1 character in length', () => {
+        it('returns a 1x1 ascii table', () => {
+          const asciiTable = toAsciiTable([['10']])
+          expect(asciiTable).toEqual(`
 |----|
 | 10 |
 |----|`)
+        })
       })
-      describe("containing 'undefined'", () => {
-        it('returns a 1x1 ascii table', () => {
-          const asciiTable = toAsciiTable([[undefined]])
-          expect(asciiTable).toStrictEqual(`
+    })
+    describe("containing 'undefined'", () => {
+      it('returns a 1x1 ascii table', () => {
+        const asciiTable = toAsciiTable([[undefined]])
+        expect(asciiTable).toStrictEqual(`
 |--|
 |  |
 |--|`)
-        })
+      })
+    })
+    describe("containing 'null'", () => {
+      it('returns a 1x1 ascii table', () => {
+        const asciiTable = toAsciiTable([[null]])
+        expect(asciiTable).toStrictEqual(`
+|--|
+|  |
+|--|`)
       })
     })
   })
