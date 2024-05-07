@@ -2,11 +2,15 @@ function createBoarder(boarderChar: string, width: number): string {
   return `|${boarderChar.repeat(width)}|`
 }
 
-function toAsciiTable(grid: Array<Array<string>>): string {
+function toAsciiTable(grid: Array<Array<string | undefined>>): string {
   let characterWidth: number = 2
   const tableRows = grid.reduce((tableRows, currentRow) => {
     tableRows.push(
-      currentRow.reduce((tableRow, currentElement): string => {
+      currentRow.reduce((tableRow: string, currentElement) => {
+        if (currentElement === undefined) {
+          return tableRow.concat(`|  |`)
+        }
+
         characterWidth += currentElement.length
         return tableRow.concat(`| ${currentElement} |`)
       }, ''),

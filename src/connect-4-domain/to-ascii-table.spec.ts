@@ -36,6 +36,15 @@ describe('to-ascii-table', () => {
 | 10 |
 |----|`)
       })
+      describe("containing 'undefined'", () => {
+        it('returns a 1x1 ascii table', () => {
+          const asciiTable = toAsciiTable([[undefined]])
+          expect(asciiTable).toStrictEqual(`
+|--|
+|  |
+|--|`)
+        })
+      })
     })
   })
 })
