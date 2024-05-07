@@ -1,7 +1,10 @@
+function createBoarder(boarderChar: string, width: number): string {
+  return `|${boarderChar.repeat(width)}|`
+}
+
 function toAsciiTable(grid: Array<Array<string>>): string {
   let characterWidth: number = 2
-  const boarderChar: string = '-'
-  const table = grid.reduce((tableRows, currentRow) => {
+  const tableRows = grid.reduce((tableRows, currentRow) => {
     tableRows.push(
       currentRow.reduce((tableRow, currentElement): string => {
         characterWidth += currentElement.length
@@ -11,14 +14,8 @@ function toAsciiTable(grid: Array<Array<string>>): string {
     return tableRows
   }, [])
 
-  return grid.length !== 0
-    ? [
-        '',
-        `|${boarderChar.repeat(characterWidth)}|`,
-        table[0],
-        `|${boarderChar.repeat(characterWidth)}|`,
-      ].join('\n')
-    : ''
+  let boarder: string = createBoarder('-', characterWidth)
+  return grid.length !== 0 ? ['', boarder, tableRows[0], boarder].join('\n') : ''
 }
 
 export default toAsciiTable
