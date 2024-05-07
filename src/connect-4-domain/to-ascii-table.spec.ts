@@ -9,12 +9,20 @@ describe('to-ascii-table', () => {
   })
   describe('given a 1x1 grid', () => {
     it('will return a string representing of the content in the cell', () => {
-      const asciiTable = toAsciiTable([])
+      const asciiTable = toAsciiTable([['1']])
       expect(asciiTable).toStrictEqual(`
-        |---|
-        | 1 |
-        |---|
-        `)
+|---|
+| 1 |
+|---|`)
+    })
+    describe('with content greater than 1 character in length', () => {
+      it('returns a 1x1 ascii table', () => {
+        const asciiTable = toAsciiTable([['10']])
+        expect(asciiTable).toEqual(`
+|----|
+| 10 |
+|----|`)
+      })
     })
   })
 })
