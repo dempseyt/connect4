@@ -8,12 +8,25 @@ describe('to-ascii-table', () => {
     })
   })
   describe('given a 1x1 grid', () => {
-    it('will return a string representing of the content in the cell', () => {
-      const asciiTable = toAsciiTable([['1']])
-      expect(asciiTable).toStrictEqual(`
+    describe('with 1 column', () => {
+      describe('containing a string', () => {
+        it('and the string is empty', () => {
+          const asciiTable = toAsciiTable([['']])
+          expect(asciiTable).toStrictEqual(`
+|--|
+|  |
+|--|`)
+        })
+        describe('with 1 character in length', () => {
+          it('will return a string representing of the content in the cell', () => {
+            const asciiTable = toAsciiTable([['1']])
+            expect(asciiTable).toStrictEqual(`
 |---|
 | 1 |
 |---|`)
+          })
+        })
+      })
     })
     describe('with content greater than 1 character in length', () => {
       it('returns a 1x1 ascii table', () => {
