@@ -36,8 +36,10 @@ function toAsciiTable<T>(
   const largestCharacterWidthPerColumn = getLargestCharacterWidthPerColumn(resolvedGrid)
   const tableRows = resolvedGrid.reduce((tableRows, currentRow) => {
     tableRows.push(
-      currentRow.reduce((tableRow, currentElement) => {
-        return tableRow.concat(` ${currentElement} |`)
+      currentRow.reduce((tableRow, currentElement, currentElementIndex) => {
+        return tableRow.concat(
+          ` ${currentElement}${' '.repeat(largestCharacterWidthPerColumn[currentElementIndex] + 1 - currentElement.length)}|`,
+        )
       }, '|'),
     )
     return tableRows
