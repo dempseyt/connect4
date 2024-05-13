@@ -67,5 +67,16 @@ describe('to-ascii-table', () => {
 |--|`)
       })
     })
+    describe('and multiple columns', () => {
+      describe('of the same length', () => {
+        it('returns a ascii table with 1 row and multiple columns', () => {
+          const asciiTable = toAsciiTable([[1, 1]])
+          expect(asciiTable).toStrictEqual(`
+|---|---|
+| 1 | 1 |
+|---|---|`)
+        })
+      })
+    })
   })
 })
