@@ -42,8 +42,8 @@ function toAsciiTable<T>(
     )
     return tableRows
   }, [] as Array<string>)
-  let boarder: string = createBoarder('-', largestCharacterWidthPerColumn)
-  return ['', boarder, tableRows[0], boarder].join('\n')
+  let border: string = createBoarder('-', largestCharacterWidthPerColumn)
+  return ['', border, tableRows.join('\n' + border + '\n'), border].join('\n')
 }
 
 export default toAsciiTable
