@@ -77,6 +77,15 @@ describe('to-ascii-table', () => {
 |---|---|`)
         })
       })
+      describe('of different lengths', () => {
+        it('returns an ascii with 1 row and multiple column', () => {
+          const asciiTable = toAsciiTable([[1, 10]])
+          expect(asciiTable).toStrictEqual(`
+|---|----|
+| 1 | 10 |
+|---|----|`)
+        })
+      })
     })
   })
 })
