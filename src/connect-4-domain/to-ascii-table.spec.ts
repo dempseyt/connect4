@@ -101,6 +101,17 @@ describe('to-ascii-table', () => {
 |---|`)
         })
       })
+      describe('where the content of each column is of different lengths', () => {
+        it('returns a ascii table with multiple rows and one column', () => {
+          const asciiTable = toAsciiTable([[1], [11]])
+          expect(asciiTable).toStrictEqual(`
+|----|
+| 1  |
+|----|
+| 11 |
+|----|`)
+        })
+      })
     })
   })
 })
