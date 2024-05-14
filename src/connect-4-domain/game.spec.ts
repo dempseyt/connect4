@@ -35,6 +35,15 @@ describe('game', () => {
           |---|---|---|---|---|---|---|"
         `)
       })
+      it('creates a game where player 1 starts with a number of tokens equal to half the number of cells', () => {
+        const game = new GameFactory()
+        expect(game.getPlayerStats(1)).toEqual(
+          expect.objectContaining({
+            playerNumber: 1,
+            remainingDiscs: 21,
+          }),
+        )
+      })
     })
   })
 })
