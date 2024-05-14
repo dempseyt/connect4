@@ -37,11 +37,11 @@ class GameFactory implements Game {
     return this.board
   }
 
-  getPlayerStats(playerNumber: 1 | 2): PlayerStats {
+  getPlayerStats(playerNumber: PlayerNumber): PlayerStats {
     return this.players[playerNumber]
   }
 
-  #createBoard(boardDimensions: { rows: number; columns: number }): Array<Array<BoardCell>> {
+  #createBoard(boardDimensions: BoardDimensions): Array<Array<BoardCell>> {
     const callback = () =>
       new Array(boardDimensions.columns).fill(undefined).map(() => ({ player: undefined }))
     const board = new Array(boardDimensions.rows).fill(undefined).map(callback)
@@ -49,14 +49,15 @@ class GameFactory implements Game {
   }
 
   #createPlayers(boardDimensions: BoardDimensions): Record<PlayerNumber, PlayerStats> {
+    const calculateRemainingDiscs = (boardDimensions.rows * boardDimensions.columns) / 2
     return {
       1: {
         playerNumber: 1,
-        remainingDiscs: (boardDimensions.rows * boardDimensions.columns) / 2,
+        remainingDiscs: calculateRemainingDiscs,
       },
       2: {
         playerNumber: 2,
-        remainingDiscs: (boardDimensions.rows * boardDimensions.columns) / 2,
+        remainingDiscs: calculateRemainingDiscs,
       },
     }
   }
