@@ -1,6 +1,6 @@
 import { BoardCell } from '@/connect-4-ui/BoardCell'
 
-type BoardCell = {
+export type BoardCell = {
   player: 1 | 2 | undefined
 }
 
