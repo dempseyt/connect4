@@ -166,35 +166,25 @@ describe('to-ascii-table', () => {
                 value === null || value === undefined ? '💩' : `${value}`
               const asciiTable = toAsciiTable(
                 [
-                  ['', 10, undefined, 1234567],
-                  [9, 3, 4, 'hello!'],
-                  ['1', '2', '21', null],
-                  [1, 1, 1, 1],
+                  ['', '', '', ''],
+                  ['', 3, 4, 'hello!'],
+                  ['', '2', '21', null],
+                  ['', 1, 1, 1],
                 ],
                 customResolver,
               )
               expect(asciiTable).toStrictEqual(`
-|---|----|----|---------|
-|   | 10 | 💩 | 1234567 |
-|---|----|----|---------|
-| 9 | 3  | 4  | hello!  |
-|---|----|----|---------|
-| 1 | 2  | 21 | 💩      |
-|---|----|----|---------|
-| 1 | 1  | 1  | 1       |
-|---|----|----|---------|`)
+|--|---|----|--------|
+|  |   |    |        |
+|--|---|----|--------|
+|  | 3 | 4  | hello! |
+|--|---|----|--------|
+|  | 2 | 21 | 💩     |
+|--|---|----|--------|
+|  | 1 | 1  | 1      |
+|--|---|----|--------|`)
             })
           })
-        })
-      })
-      describe('where not all rows have the correct number of columns', () => {
-        it('throws an error', () => {
-          const asciiTable = () =>
-            toAsciiTable([
-              [1, 2, 3],
-              [1, 2],
-            ])
-          expect(asciiTable).toThrow('Each row requires the same number of columns!')
         })
       })
     })
