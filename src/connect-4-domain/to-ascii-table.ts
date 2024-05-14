@@ -4,6 +4,10 @@ function createBoarder(borderChar: string, cellWidthPerColumn: Array<number>): s
   }, '|')
 }
 
+const throwErrorMsg = (msg: string) => {
+  throw new Error(msg)
+}
+
 const defaultResolver = <T>(value: T): string =>
   value === undefined || value === null ? '' : `${value}`
 
@@ -32,6 +36,11 @@ function toAsciiTable<T>(
   if (grid.length === 0) {
     return ''
   }
+  const firstRowLength: number = grid[0].length
+  if (!grid.every((currentRow) => currentRow.length === firstRowLength)) {
+    throwErrorMsg('Each row requires the same number of columns!')
+  }
+
   const resolvedGrid = resolveGridCells(grid, cellResolver)
   const largestCharacterWidthPerColumn = getLargestCharacterWidthPerColumn(resolvedGrid)
   const tableRows = resolvedGrid.reduce((tableRows, currentRow) => {
