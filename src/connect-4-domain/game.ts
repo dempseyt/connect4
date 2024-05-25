@@ -51,14 +51,8 @@ class GameFactory implements Game {
   #createPlayers({ rows, columns }: BoardDimensions): Record<PlayerNumber, PlayerStats> {
     const calculateRemainingDiscs = (rows * columns) / 2
     return {
-      1: {
-        playerNumber: 1,
-        remainingDiscs: calculateRemainingDiscs,
-      },
-      2: {
-        playerNumber: 2,
-        remainingDiscs: calculateRemainingDiscs,
-      },
+      1: { playerNumber: 1, remainingDiscs: calculateRemainingDiscs },
+      2: { playerNumber: 2, remainingDiscs: calculateRemainingDiscs },
     }
   }
 }
