@@ -22,13 +22,13 @@ describe('toBeDeeplyUnequal', () => {
     expect(object1).toBeDeeplyUnequal(object2)
   })
   it('should fail when one object has an additional key, and shares a reference to a value', () => {
-    const innerArray = []
+    const innerArray: any[] = []
     const object1 = { a: 1, b: innerArray }
     const object2 = { a: 1, b: innerArray, c: 3 }
     expect(object1).not.toBeDeeplyUnequal(object2)
   })
   it('it should pass, given an object and an array', () => {
-    const arr = []
+    const arr: any[] = []
     const obj = {}
     expect(obj).toBeDeeplyUnequal(arr)
   })
@@ -41,13 +41,13 @@ describe('toBeDeeplyUnequal', () => {
     expect(undefined).toBeDeeplyUnequal(obj)
   })
   it('should fail, given two arrays that are the same', () => {
-    const firstArray = []
+    const firstArray: any[] = []
     const secondArray = firstArray
     expect(firstArray).not.toBeDeeplyUnequal(secondArray)
   })
   it('should pass given two arrays that are different', () => {
-    const firstArray = []
-    const secondArray = []
+    const firstArray: any[] = []
+    const secondArray: any[] = []
     expect(firstArray).toBeDeeplyUnequal(secondArray)
   })
   it('should pass when arrays are unequal at a shallow level', () => {
@@ -56,7 +56,7 @@ describe('toBeDeeplyUnequal', () => {
     expect(firstArray).toBeDeeplyUnequal(secondArray)
   })
   it('should fail when arrays are equal at a shallow level', () => {
-    const innerArray = []
+    const innerArray: any[] = []
     const firstArray = [innerArray]
     const secondArray = [innerArray]
     expect(firstArray).not.toBeDeeplyUnequal(secondArray)

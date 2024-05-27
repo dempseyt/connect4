@@ -1,6 +1,6 @@
 import { MatcherResult } from '@/vitest'
 
-function checkIsPlainObjectOrArray(value) {
+function getIsPlainObjectOrArray(value: any): value is object | any[] {
   return (
     (value !== null &&
       typeof value === 'object' &&
@@ -9,11 +9,11 @@ function checkIsPlainObjectOrArray(value) {
   )
 }
 
-function checkIfDeepUnequal(value1, value2) {
+function getIsDeeplyUnequal(value1: any, value2: any): boolean {
   if (
-    (checkIsPlainObjectOrArray(value1) && !checkIsPlainObjectOrArray(value2)) ||
-    (!checkIsPlainObjectOrArray(value1) && checkIsPlainObjectOrArray(value2)) ||
-    (!checkIsPlainObjectOrArray(value1) && !checkIsPlainObjectOrArray(value2))
+    (getIsPlainObjectOrArray(value1) && !getIsPlainObjectOrArray(value2)) ||
+    (!getIsPlainObjectOrArray(value1) && getIsPlainObjectOrArray(value2)) ||
+    (!getIsPlainObjectOrArray(value1) && !getIsPlainObjectOrArray(value2))
   ) {
     return true
   }
@@ -23,7 +23,7 @@ function checkIfDeepUnequal(value1, value2) {
   const objectKeys1 = Object.keys(value1)
 
   const isDeepUnequal = objectKeys1.reduce((isDeepUnequal, currentKey) => {
-    return isDeepUnequal && checkIfDeepUnequal(value1[currentKey], value2[currentKey])
+    return isDeepUnequal && getIsDeeplyUnequal(value1[currentKey], value2[currentKey])
   }, true)
 
   return isDeepUnequal
@@ -35,7 +35,7 @@ function toBeDeeplyUnequal(
   expected: object,
 ): MatcherResult {
   const isNot = this ?? {}
-  const areObjectsDifferent = checkIfDeepUnequal(received, expected)
+  const areObjectsDifferent = getIsDeeplyUnequal(received, expected)
   return {
     pass: areObjectsDifferent,
     message: () => `Objects are deeply ${isNot ? 'un' : ''}equal`,
