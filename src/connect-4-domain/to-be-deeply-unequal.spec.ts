@@ -50,6 +50,12 @@ describe('toBeDeeplyUnequal', () => {
     const object2 = { a: 1, b: { c: 2 } }
     expect(object1).toBeDeeplyUnequal(object2)
   })
+  it('should fail when the objects are not deeply unequal at a nested level', () => {
+    const innerObject = {}
+    const object1 = { a: 1, b: innerObject }
+    const object2 = { a: 1, b: innerObject }
+    expect(object1).not.toBeDeeplyUnequal(object2)
+  })
   it('should fail, given two arrays that are the same', () => {
     const firstArray: any[] = []
     const secondArray = firstArray
