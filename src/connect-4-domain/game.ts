@@ -13,6 +13,8 @@ type BoardDimensions = {
   columns: number
 }
 
+type Board = Array<Array<BoardCell>>
+
 interface PlayerStats {
   playerNumber: 1 | 2
   remainingDiscs: number
@@ -25,7 +27,7 @@ interface Game {
 }
 
 class GameFactory implements Game {
-  private board: Array<Array<BoardCell>>
+  private board: Board
   private players: Record<PlayerNumber, PlayerStats>
 
   constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
@@ -34,14 +36,14 @@ class GameFactory implements Game {
   }
 
   getBoard() {
-    return this.board
+    return this.#createDeepCloneOfBoard()
   }
 
   getPlayerStats(playerNumber: PlayerNumber): PlayerStats {
     return this.players[playerNumber]
   }
 
-  #createBoard(boardDimensions: BoardDimensions): Array<Array<BoardCell>> {
+  #createBoard(boardDimensions: BoardDimensions): Board {
     const callback = () =>
       new Array(boardDimensions.columns).fill(undefined).map(() => ({ player: undefined }))
     const board = new Array(boardDimensions.rows).fill(undefined).map(callback)
@@ -54,6 +56,10 @@ class GameFactory implements Game {
       1: { playerNumber: 1, remainingDiscs: calculateRemainingDiscs },
       2: { playerNumber: 2, remainingDiscs: calculateRemainingDiscs },
     }
+  }
+
+  #createDeepCloneOfBoard(): Board {
+    return this.board
   }
 }
 
