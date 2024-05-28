@@ -59,6 +59,10 @@ describe('game', () => {
         const secondBoard = game.getBoard()
         expect(secondBoard).toBeDeeplyUnequal(firstBoard)
       })
+      it.todo(
+        'changes made to the game after a getBoard do not affect copies of the board',
+        () => {},
+      )
     })
   })
 })
