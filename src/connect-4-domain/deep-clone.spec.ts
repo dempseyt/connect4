@@ -34,10 +34,10 @@ describe('deep-clone', () => {
     expect(cloned.e[0]).toStrictEqual(original.e[0])
     expect(cloned.e[1]).toStrictEqual(original.e[1])
   })
-  it('should return a deep copy of a function', () => {
+  it('should copy functions by reference', () => {
     const original = (x: number) => 2 * x
     const cloned = deepClone(original)
     expect(original(3)).toStrictEqual(cloned(3))
-    expect(original).not.toBe(cloned)
+    expect(original).toBe(cloned)
   })
 })
