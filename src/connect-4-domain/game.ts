@@ -23,7 +23,7 @@ interface PlayerStats {
 
 type PlayerNumber = 1 | 2
 
-export class InvalidBoardDimensions extends RangeError {}
+export class InvalidBoardDimensionsError extends RangeError {}
 
 interface Game {
   getBoard: () => ReadonlyArray<Array<BoardCell>>
@@ -35,9 +35,9 @@ class GameFactory implements Game {
 
   constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
     if (boardDimensions.rows < 1) {
-      throw new InvalidBoardDimensions('Number of rows must be greater than or equal to 1')
+      throw new InvalidBoardDimensionsError('Number of rows must be greater than or equal to 1')
     } else if (boardDimensions.columns < 1) {
-      throw new InvalidBoardDimensions('Number of columns must be greater than or equal to 1')
+      throw new InvalidBoardDimensionsError('Number of columns must be greater than or equal to 1')
     }
     this.board = this.#createBoard(boardDimensions)
     this.players = this.#createPlayers(boardDimensions)

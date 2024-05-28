@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import GameFactory, { BoardCell, InvalidBoardDimensions } from '@/connect-4-domain/game'
+import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect-4-domain/game'
 import _toAsciiTable from './to-ascii-table'
 
 function toAsciiTable(board: Array<Array<BoardCell>>): string {
@@ -68,15 +68,24 @@ describe('game', () => {
       describe('with 0 rows', () => {
         it('throws an error', () => {
           expect(() => new GameFactory({ boardDimensions: { rows: 0, columns: 3 } })).toThrow(
-            new InvalidBoardDimensions('Number of rows must be greater than or equal to 1'),
+            new InvalidBoardDimensionsError('Number of rows must be greater than or equal to 1'),
           )
         })
-        describe('with 0 columns', () => {
-          it('throws an error', () => {
-            expect(() => new GameFactory({ boardDimensions: { rows: 2, columns: 0 } })).toThrow(
-              new InvalidBoardDimensions('Number of columns must be greater than or equal to 1'),
-            )
-          })
+      })
+      describe('with 0 columns', () => {
+        it('throws an error', () => {
+          expect(() => new GameFactory({ boardDimensions: { rows: 2, columns: 0 } })).toThrow(
+            new InvalidBoardDimensionsError('Number of columns must be greater than or equal to 1'),
+          )
+        })
+      })
+      describe('which results in an odd number of cells', () => {
+        it('throws an error', () => {
+          expect(() => new GameFactory({ boardDimensions: { rows: 3, columns: 3 } })).toThrow(
+            new InvalidBoardDimensionsError(
+              `Total number of cells ona board must be even. Supplied board dimensions 3 rows x 3 columns results in an odd number of cells (9)`,
+            ),
+          )
         })
       })
     })
