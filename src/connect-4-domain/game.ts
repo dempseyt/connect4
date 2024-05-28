@@ -23,11 +23,10 @@ interface PlayerStats {
 
 type PlayerNumber = 1 | 2
 
-export class InvalidBoardDimensionsError extends RangeError {}
-
 interface Game {
   getBoard: () => ReadonlyArray<Array<BoardCell>>
 }
+export class InvalidBoardDimensionsError extends RangeError {}
 
 class GameFactory implements Game {
   private board: Board
