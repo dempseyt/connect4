@@ -34,6 +34,12 @@ class GameFactory implements Game {
   private players: Record<PlayerNumber, PlayerStats>
 
   constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
+    this.#validateBoardDimensions(boardDimensions)
+    this.board = this.#createBoard(boardDimensions)
+    this.players = this.#createPlayers(boardDimensions)
+  }
+
+  #validateBoardDimensions(boardDimensions: BoardDimensions) {
     if (boardDimensions.rows < 1) {
       throw new InvalidBoardDimensionsError('Number of rows must be greater than or equal to 1')
     } else if (boardDimensions.columns < 1) {
@@ -43,8 +49,6 @@ class GameFactory implements Game {
         `Total number of cells on a board must be even. Supplied board dimensions (${boardDimensions.rows} rows x ${boardDimensions.columns} columns) results in an odd number of cells (${boardDimensions.rows * boardDimensions.columns})`,
       )
     }
-    this.board = this.#createBoard(boardDimensions)
-    this.players = this.#createPlayers(boardDimensions)
   }
 
   getBoard() {
