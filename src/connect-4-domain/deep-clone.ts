@@ -1,18 +1,12 @@
 function deepClone<T>(value: T, visitedCache: WeakMap<any, any> = new WeakMap()): T {
   if (!(value instanceof Object) || typeof value === 'function') {
     return value
-  }
-  if (visitedCache.has(value)) {
+  } else if (visitedCache.has(value)) {
     return visitedCache.get(value)
   }
 
-  let result: T
+  const result: T = Array.isArray(value) ? ([] as T) : ({} as T)
 
-  if (Array.isArray(value)) {
-    result = [] as T
-  } else {
-    result = {} as T
-  }
   visitedCache.set(value, result)
 
   for (const key of Object.keys(value)) {
