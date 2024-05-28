@@ -32,11 +32,13 @@ interface Game {
 class GameFactory implements Game {
   private board: Board
   private players: Record<PlayerNumber, PlayerStats>
+  private activePlayer: PlayerNumber | undefined
 
   constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
     this.#validateBoardDimensions(boardDimensions)
     this.board = this.#createBoard(boardDimensions)
     this.players = this.#createPlayers(boardDimensions)
+    this.activePlayer = 1
   }
 
   #validateBoardDimensions(boardDimensions: BoardDimensions) {
@@ -51,14 +53,6 @@ class GameFactory implements Game {
     }
   }
 
-  getBoard() {
-    return deepClone(this.board)
-  }
-
-  getPlayerStats(playerNumber: PlayerNumber): PlayerStats {
-    return this.players[playerNumber]
-  }
-
   #createBoard({ rows, columns }: BoardDimensions): Board {
     const callback = () => new Array(columns).fill(undefined).map(() => ({ player: undefined }))
     const board = new Array(rows).fill(undefined).map(callback)
@@ -71,6 +65,18 @@ class GameFactory implements Game {
       1: { playerNumber: 1, remainingDiscs: calculateRemainingDiscs },
       2: { playerNumber: 2, remainingDiscs: calculateRemainingDiscs },
     }
+  }
+
+  getBoard() {
+    return deepClone(this.board)
+  }
+
+  getPlayerStats(playerNumber: PlayerNumber): PlayerStats {
+    return this.players[playerNumber]
+  }
+
+  getActivePlayer() {
+    return this.activePlayer
   }
 }
 
