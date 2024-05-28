@@ -1,5 +1,21 @@
 function deepClone<T>(value: T): T {
-  return value
+  if (!(value instanceof Object)) {
+    return value
+  }
+
+  let result: T
+
+  if (Array.isArray(value)) {
+    result = [] as T
+  } else {
+    result = {} as T
+  }
+
+  for (const key of Object.keys(value)) {
+    ;(result as any)[key] = deepClone((value as any)[key])
+  }
+
+  return result
 }
 
 export default deepClone
