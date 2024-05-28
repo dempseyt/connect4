@@ -1,4 +1,5 @@
 import { BoardCell } from '@/connect-4-ui/BoardCell'
+import deepClone from './deep-clone'
 
 export type BoardCell = {
   player: 1 | 2 | undefined
@@ -36,7 +37,7 @@ class GameFactory implements Game {
   }
 
   getBoard() {
-    return this.#createDeepCloneOfBoard()
+    return deepClone(this.board)
   }
 
   getPlayerStats(playerNumber: PlayerNumber): PlayerStats {
@@ -56,10 +57,6 @@ class GameFactory implements Game {
       1: { playerNumber: 1, remainingDiscs: calculateRemainingDiscs },
       2: { playerNumber: 2, remainingDiscs: calculateRemainingDiscs },
     }
-  }
-
-  #createDeepCloneOfBoard(): Board {
-    return this.board
   }
 }
 
