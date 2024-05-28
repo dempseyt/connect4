@@ -40,4 +40,10 @@ describe('deep-clone', () => {
     expect(original(3)).toStrictEqual(cloned(3))
     expect(original).toBe(cloned)
   })
+  it('should return the same symbol unchanged', () => {
+    const original = Symbol()
+    const cloned = deepClone(original)
+    expect(original).toStrictEqual(cloned)
+    expect(original).toBe(cloned)
+  })
 })
