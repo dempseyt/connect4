@@ -9,7 +9,9 @@ function deepClone<T>(value: T, visitedCache: WeakMap<any, any> = new WeakMap())
 
   visitedCache.set(value, result)
 
-  for (const key of Object.keys(value)) {
+  const stringAndSymbolKeys = [...Object.keys(value), ...Object.getOwnPropertySymbols(value)]
+
+  for (const key of stringAndSymbolKeys) {
     const nestedValue = (value as any)[key]
     const clonedValue = deepClone<typeof nestedValue>(nestedValue, visitedCache)
     ;(result as any)[key] = clonedValue
