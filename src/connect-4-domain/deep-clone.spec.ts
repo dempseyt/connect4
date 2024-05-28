@@ -71,4 +71,10 @@ describe('deep-clone', () => {
     expect(cloned).toStrictEqual(original)
     expect(cloned).toBe(original)
   })
+  it('should return undefined as is', () => {
+    const original = undefined
+    const cloned = deepClone(original)
+    expect(cloned).toStrictEqual(original)
+    expect(cloned).toBe(original)
+  })
 })
