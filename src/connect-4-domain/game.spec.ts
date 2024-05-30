@@ -247,6 +247,21 @@ describe('game', () => {
           })
         })
       })
+      describe('and the cell is on the first row', () => {
+        describe('and the cell is unoccupied', () => {
+          it('the player should be able to move a disk into a cell', () => {
+            const game = new GameFactory({
+              boardDimensions: { rows: 1, columns: 2 },
+            })
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+              "
+              |---|---|
+              |   |   |
+              |---|---|"
+            `)
+          })
+        })
+      })
     })
   })
 })
