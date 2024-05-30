@@ -259,6 +259,31 @@ describe('game', () => {
               |   |   |
               |---|---|"
             `)
+            const movePlayerCommand = createMovePlayerCommand({
+              player: 1,
+              targetCell: {
+                row: 0,
+                column: 0,
+              },
+            })
+            const playerMovedEvent = game.move(movePlayerCommand)
+            expect(playerMovedEvent).toEqual({
+              type: 'PLAYER_MOVED',
+              payload: {
+                player: 1,
+                targetCell: {
+                  row: 0,
+                  column: 0,
+                },
+              },
+            })
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+              "
+              |---|---|
+              | 1 |   |
+              |---|---|"
+            `)
+            expect(game.getActivePlayer()).toBe(2)
           })
         })
       })
