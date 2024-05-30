@@ -165,6 +165,26 @@ describe('game', () => {
           `)
           expect(game.getActivePlayer()).toBe(1)
         })
+        it('player should not be able to move to a cell with a row number above the last row', () => {
+          const game = new GameFactory()
+          const movePlayerCommand = {
+            player: 1,
+            targetCell: {
+              row: 2,
+              column: 0,
+            },
+          }
+          const event = game.move(movePlayerCommand)
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot()
+          expect(game.getActivePlayer()).toBe(1)
+          expect(event).toEqual({
+            type: 'PLAYER_MOVE_FAILED',
+            payload: {
+              message:
+                "The cell at row 2 and column 0 doesn't exist on the board. The row number must be >= 0 and <= 1",
+            },
+          })
+        })
       })
     })
   })
