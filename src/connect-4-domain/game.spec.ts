@@ -219,6 +219,33 @@ describe('game', () => {
             },
           })
         })
+        it('player should not be able to move to a cell with a column number to the right of the last column', () => {
+          const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
+          const movePlayerCommand = createMovePlayerCommand({
+            player: 1,
+            targetCell: {
+              row: 0,
+              column: 2,
+            },
+          })
+          const event = game.move(movePlayerCommand)
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+            "
+            |---|---|
+            |   |   |
+            |---|---|
+            |   |   |
+            |---|---|"
+          `)
+          expect(game.getActivePlayer()).toBe(1)
+          expect(event).toEqual({
+            type: 'PLAYER_MOVE_FAILED',
+            payload: {
+              message:
+                'The cell at row 0 column 2 does not exist on the board. The column number must be >= 0 and <= 1.',
+            },
+          })
+        })
         it('player should not be able to move to a cell with a row and column out of bounds', () => {
           const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
           const movePlayerCommand = createMovePlayerCommand({
