@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect-4-domain/game'
 import _toAsciiTable from './to-ascii-table'
+import { createMovePlayerCommand } from '@/connect-4-domain/commands'
 
 function toAsciiTable(board: Array<Array<BoardCell>>): string {
   const cellResolver = (cell: BoardCell) => (cell.player === undefined ? ` ` : `${cell.player}`)
@@ -154,6 +155,15 @@ describe('game', () => {
                 'The cell at row -1 column 0 does not exist on the board. The row number must be >= 0 and <= 1',
             },
           })
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+            "
+            |---|---|
+            |   |   |
+            |---|---|
+            |   |   |
+            |---|---|"
+          `)
+          expect(game.getActivePlayer()).toBe(1)
         })
       })
     })
