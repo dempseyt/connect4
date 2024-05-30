@@ -3,13 +3,13 @@ type TargetCell = {
   column: number
 }
 
-export enum CommandTypes {
-  MOVE_PLAYER = 'MOVE_PLAYER',
-}
-
 export type MovePlayerCommandPayload = {
   player: 1 | 2
   targetCell: TargetCell
+}
+
+export enum CommandTypes {
+  MOVE_PLAYER = 'MOVE_PLAYER',
 }
 
 export class MovePlayerCommand {

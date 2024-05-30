@@ -1,5 +1,7 @@
 import { BoardCell } from '@/connect-4-ui/BoardCell'
 import deepClone from './deep-clone'
+import { MovePlayerCommand, MovePlayerCommandPayload } from './commands'
+import { PlayerMoveFailedEvent, createPlayerMoveFailedEvent } from './events'
 
 export type BoardCell = {
   player: 1 | 2 | undefined
@@ -76,6 +78,16 @@ class GameFactory implements Game {
 
   getActivePlayer() {
     return this.activePlayer
+  }
+
+  move({
+    payload: {
+      player,
+      targetCell: { row, column },
+    },
+  }: MovePlayerCommand): PlayerMoveFailedEvent {
+    const message = `The cell at row ${row} column ${column} does not exist on the board. The row number must be >= 0 and <= ${this.board.length - 1}`
+    return createPlayerMoveFailedEvent({ message: message })
   }
 }
 

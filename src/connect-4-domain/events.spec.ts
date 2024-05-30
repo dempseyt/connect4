@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { PlayerMoveFailedEvent, createPlayerMoveFailedEvent } from './event'
+import { PlayerMoveFailedEvent, createPlayerMoveFailedEvent } from './events'
 
 describe('events', () => {
   describe('createPlayerMoveFailedEvent', () => {
