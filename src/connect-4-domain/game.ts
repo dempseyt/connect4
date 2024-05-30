@@ -68,6 +68,10 @@ class GameFactory implements Game {
     }
   }
 
+  // #createValidatedMove(moveFunction: Function): PlayerMoveFailedEvent | () => {}  {
+
+  // }
+
   getBoard() {
     return deepClone(this.board)
   }
@@ -85,7 +89,9 @@ class GameFactory implements Game {
       targetCell: { row, column },
     },
   }: MovePlayerCommand): PlayerMoveFailedEvent {
-    const message = `The cell at row ${row} column ${column} does not exist on the board. The row number must be >= 0 and <= ${this.board.length - 1}`
+    const axis = row < 0 || row > this.board.length - 1 ? 'row' : 'column'
+
+    const message = `The cell at row ${row} column ${column} does not exist on the board. The ${axis} number must be >= 0 and <= ${this.board.length - 1}`
     return createPlayerMoveFailedEvent({ message: message })
   }
 }
