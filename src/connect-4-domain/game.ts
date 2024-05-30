@@ -1,7 +1,12 @@
 import { BoardCell } from '@/connect-4-ui/BoardCell'
 import deepClone from './deep-clone'
 import { MovePlayerCommand, MovePlayerCommandPayload } from './commands'
-import { PlayerMoveFailedEvent, createPlayerMoveFailedEvent } from './events'
+import {
+  PlayerMoveFailedEvent,
+  PlayerMovedEvent,
+  createPlayerMoveFailedEvent,
+  createPlayerMovedEvent,
+} from './events'
 
 export type BoardCell = {
   player: 1 | 2 | undefined
@@ -68,9 +73,50 @@ class GameFactory implements Game {
     }
   }
 
-  // #createValidatedMove(moveFunction: Function): PlayerMoveFailedEvent | () => {}  {
+  #createValidatedMove(
+    moveFunction: (movePlayerCommand: MovePlayerCommand) => PlayerMovedEvent,
+  ): (movePlayerCommand: MovePlayerCommand) => PlayerMoveFailedEvent | PlayerMovedEvent {
+    function validatedMove(
+      this: any,
+      movePlayerCommand: MovePlayerCommand,
+    ): PlayerMoveFailedEvent | PlayerMovedEvent {
+      const {
+        payload: {
+          targetCell: { row, column },
+        },
+      } = movePlayerCommand
+      const isRowValid = row >= 0 && row < this.board.length
+      const isColumnValid = column >= 0 && column < this.board[0].length
+      const isMoveValid = isRowValid && isColumnValid
+      if (isMoveValid) {
+        return moveFunction(movePlayerCommand)
+      } else {
+        let message = `The cell at row ${row} column ${column} does not exist on the board.`
+        if (!isRowValid) {
+          message += ` The row number must be >= 0 and <= ${this.board.length - 1}.`
+        }
+        if (!isColumnValid) {
+          message += ` The column number must be >= 0 and <= ${this.board[0].length - 1}.`
+        }
+        return createPlayerMoveFailedEvent({ message: message })
+      }
+    }
+    return validatedMove
+  }
 
-  // }
+  #_move({
+    payload: {
+      player,
+      targetCell: { row, column },
+    },
+  }: MovePlayerCommand): PlayerMovedEvent {
+    this.board[row][column] = { player }
+    this.activePlayer = this.activePlayer === 1 ? 2 : 1
+
+    return createPlayerMovedEvent({ player, targetCell: { row, column } })
+  }
+
+  move = this.#createValidatedMove(this.#_move.bind(this))
 
   getBoard() {
     return deepClone(this.board)
@@ -82,21 +128,6 @@ class GameFactory implements Game {
 
   getActivePlayer() {
     return this.activePlayer
-  }
-
-  move({
-    payload: {
-      targetCell: { row, column },
-    },
-  }: MovePlayerCommand): PlayerMoveFailedEvent {
-    let message = `The cell at row ${row} column ${column} does not exist on the board.`
-    if (row < 0 || row > this.board.length - 1) {
-      message += ` The row number must be >= 0 and <= ${this.board.length - 1}.`
-    }
-    if (column < 0 || column > this.board[0].length) {
-      message += ` The column number must be >= 0 and <= ${this.board[0].length - 1}.`
-    }
-    return createPlayerMoveFailedEvent({ message: message })
   }
 }
 
