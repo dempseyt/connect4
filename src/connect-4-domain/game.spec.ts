@@ -152,7 +152,7 @@ describe('game', () => {
             type: 'PLAYER_MOVE_FAILED',
             payload: {
               message:
-                'The cell at row -1 column 0 does not exist on the board. The row number must be >= 0 and <= 1',
+                'The cell at row -1 column 0 does not exist on the board. The row number must be >= 0 and <= 1.',
             },
           })
           expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
@@ -188,7 +188,7 @@ describe('game', () => {
             type: 'PLAYER_MOVE_FAILED',
             payload: {
               message:
-                'The cell at row 2 column 0 does not exist on the board. The row number must be >= 0 and <= 1',
+                'The cell at row 2 column 0 does not exist on the board. The row number must be >= 0 and <= 1.',
             },
           })
         })
@@ -215,7 +215,34 @@ describe('game', () => {
             type: 'PLAYER_MOVE_FAILED',
             payload: {
               message:
-                'The cell at row 0 column -1 does not exist on the board. The column number must be >= 0 and <= 1',
+                'The cell at row 0 column -1 does not exist on the board. The column number must be >= 0 and <= 1.',
+            },
+          })
+        })
+        it('player should not be able to move to a cell with a row and column out of bounds', () => {
+          const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
+          const movePlayerCommand = createMovePlayerCommand({
+            player: 1,
+            targetCell: {
+              row: -1,
+              column: -1,
+            },
+          })
+          const event = game.move(movePlayerCommand)
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+            "
+            |---|---|
+            |   |   |
+            |---|---|
+            |   |   |
+            |---|---|"
+          `)
+          expect(game.getActivePlayer()).toBe(1)
+          expect(event).toEqual({
+            type: 'PLAYER_MOVE_FAILED',
+            payload: {
+              message:
+                'The cell at row -1 column -1 does not exist on the board. The row number must be >= 0 and <= 1. The column number must be >= 0 and <= 1.',
             },
           })
         })
