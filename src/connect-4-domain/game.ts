@@ -89,9 +89,13 @@ class GameFactory implements Game {
       targetCell: { row, column },
     },
   }: MovePlayerCommand): PlayerMoveFailedEvent {
-    const axis = row < 0 || row > this.board.length - 1 ? 'row' : 'column'
-
-    const message = `The cell at row ${row} column ${column} does not exist on the board. The ${axis} number must be >= 0 and <= ${this.board.length - 1}`
+    let message = `The cell at row ${row} column ${column} does not exist on the board.`
+    if (row < 0 || row > this.board.length - 1) {
+      message += ` The row number must be >= 0 and <= ${this.board.length - 1}.`
+    }
+    if (column < 0 || column > this.board[0].length) {
+      message += ` The column number must be >= 0 and <= ${this.board[0].length - 1}.`
+    }
     return createPlayerMoveFailedEvent({ message: message })
   }
 }
