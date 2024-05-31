@@ -7,6 +7,7 @@ import {
   createPlayerMoveFailedEvent,
   createPlayerMovedEvent,
 } from './events'
+import toAsciiTable from './to-ascii-table'
 
 export type BoardCell = {
   player: 1 | 2 | undefined
@@ -89,6 +90,11 @@ class GameFactory implements Game {
     return this.board[row][column].player === undefined
   }
 
+  #getIsCellUnderneathOccupied(row: number, column: number): boolean {
+    if (row === 0) return true
+    return this.board[row - 1][column].player !== undefined
+  }
+
   #createValidatedMove(
     moveFunction: (movePlayerCommand: MovePlayerCommand) => PlayerMovedEvent,
   ): (movePlayerCommand: MovePlayerCommand) => PlayerMoveFailedEvent | PlayerMovedEvent {
@@ -102,7 +108,11 @@ class GameFactory implements Game {
         },
       } = movePlayerCommand
 
-      if (this.#getIsCellOnBoard(row, column) && this.#getIsCellUnoccupied(row, column)) {
+      if (
+        this.#getIsCellOnBoard(row, column) &&
+        this.#getIsCellUnoccupied(row, column) &&
+        this.#getIsCellUnderneathOccupied(row, column)
+      ) {
         return moveFunction(movePlayerCommand)
       }
 
@@ -114,6 +124,11 @@ class GameFactory implements Game {
         if (!this.#getIsColumnValid(column)) {
           message += ` The column number must be >= 0 and <= ${this.board[0].length - 1}.`
         }
+        return createPlayerMoveFailedEvent({ message: message })
+      }
+
+      if (!this.#getIsCellUnderneathOccupied(row, column)) {
+        const message = `The cell at row ${row} column ${column} cannot be placed there as there is no disk in the row below.`
         return createPlayerMoveFailedEvent({ message: message })
       }
 
