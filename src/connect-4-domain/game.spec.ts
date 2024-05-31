@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect-4-domain/game'
 import _toAsciiTable from './to-ascii-table'
 import { MovePlayerCommand, createMovePlayerCommand } from '@/connect-4-domain/commands'
+import { EventTypes } from './events'
 
 function toAsciiTable(board: Array<Array<BoardCell>>): string {
   const cellResolver = (cell: BoardCell) => (cell.player === undefined ? ` ` : `${cell.player}`)
@@ -384,6 +385,33 @@ describe('game', () => {
               | 1 |   |
               |---|---|
               | 2 |   |
+              |---|---|"
+            `)
+          })
+        })
+        describe('and the cell below is unoccupied', () => {
+          it('the player should not be able to move a disk into the cell', () => {
+            const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
+            const movePlayerCommand = createMovePlayerCommand({
+              player: 1,
+              targetCell: {
+                row: 1,
+                column: 0,
+              },
+            })
+            expect(game.move(movePlayerCommand)).toEqual({
+              type: 'PLAYER_MOVE_FAILED',
+              payload: {
+                message:
+                  'The cell at row 1 column 0 cannot be placed there as there is no disk in the row below.',
+              },
+            })
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+              "
+              |---|---|
+              |   |   |
+              |---|---|
+              |   |   |
               |---|---|"
             `)
           })
