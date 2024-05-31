@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect-4-domain/game'
 import _toAsciiTable from './to-ascii-table'
-import { createMovePlayerCommand } from '@/connect-4-domain/commands'
+import { MovePlayerCommand, createMovePlayerCommand } from '@/connect-4-domain/commands'
 
 function toAsciiTable(board: Array<Array<BoardCell>>): string {
   const cellResolver = (cell: BoardCell) => (cell.player === undefined ? ` ` : `${cell.player}`)
@@ -345,6 +345,47 @@ describe('game', () => {
                 message: 'The cell at row 0 column 0 is already occupied.',
               },
             })
+          })
+        })
+      })
+      describe('and a cell on the second row', () => {
+        describe('and the cell below is occupied', () => {
+          it('the player is able to move a disk into a cell', () => {
+            const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
+            game.move(
+              createMovePlayerCommand({
+                player: 1,
+                targetCell: {
+                  row: 0,
+                  column: 0,
+                },
+              }),
+            )
+            const movePlayerCommand = createMovePlayerCommand({
+              player: 2,
+              targetCell: {
+                row: 1,
+                column: 0,
+              },
+            })
+            expect(game.move(movePlayerCommand)).toEqual({
+              type: 'PLAYER_MOVED',
+              payload: {
+                player: 2,
+                targetCell: {
+                  row: 1,
+                  column: 0,
+                },
+              },
+            })
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+              "
+              |---|---|
+              | 1 |   |
+              |---|---|
+              | 2 |   |
+              |---|---|"
+            `)
           })
         })
       })
