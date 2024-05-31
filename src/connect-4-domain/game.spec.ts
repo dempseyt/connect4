@@ -418,5 +418,25 @@ describe('game', () => {
         })
       })
     })
+    describe('given a player that is currently inactive', () => {
+      it('the player is unable to make a move', () => {
+        const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
+        const playerMoveCommand = createMovePlayerCommand({
+          player: 2,
+          targetCell: {
+            row: 0,
+            column: 0,
+          },
+        })
+        expect(game.getActivePlayer()).toBe(1)
+        const playerMoveEvent = game.move(playerMoveCommand)
+        expect(playerMoveEvent).toEqual({
+          type: 'PLAYER_MOVE_FAILED',
+          payload: {
+            message: `Player 2 cannot move as player 1 is currently active.`,
+          },
+        })
+      })
+    })
   })
 })
