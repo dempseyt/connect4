@@ -73,6 +73,22 @@ class GameFactory implements Game {
     }
   }
 
+  #getIsCellOnBoard(row: number, column: number): boolean {
+    return this.#getIsRowValid(row) && this.#getIsColumnValid(column)
+  }
+
+  #getIsRowValid(row: number): boolean {
+    return row >= 0 && row < this.board.length
+  }
+
+  #getIsColumnValid(column: number): boolean {
+    return column >= 0 && column < this.board[0].length
+  }
+
+  #getIsCellUnoccupied(row: number, column: number): boolean {
+    return this.board[row][column].player === undefined
+  }
+
   #createValidatedMove(
     moveFunction: (movePlayerCommand: MovePlayerCommand) => PlayerMovedEvent,
   ): (movePlayerCommand: MovePlayerCommand) => PlayerMoveFailedEvent | PlayerMovedEvent {
@@ -85,27 +101,24 @@ class GameFactory implements Game {
           targetCell: { row, column },
         },
       } = movePlayerCommand
-      const isRowValid = row >= 0 && row < this.board.length
-      const isColumnValid = column >= 0 && column < this.board[0].length
-      const isMoveValidPositionInBoard = isRowValid && isColumnValid
-      if (isMoveValidPositionInBoard) {
-        const isUnoccupied = this.board[row][column].player === undefined
-        if (isUnoccupied) {
-          return moveFunction(movePlayerCommand)
-        } else {
-          let message = `The cell at row ${row} column ${column} is already occupied.`
-          return createPlayerMoveFailedEvent({ message: message })
-        }
-      } else {
+
+      if (this.#getIsCellOnBoard(row, column) && this.#getIsCellUnoccupied(row, column)) {
+        return moveFunction(movePlayerCommand)
+      }
+
+      if (!this.#getIsCellOnBoard(row, column)) {
         let message = `The cell at row ${row} column ${column} does not exist on the board.`
-        if (!isRowValid) {
+        if (!this.#getIsRowValid(row)) {
           message += ` The row number must be >= 0 and <= ${this.board.length - 1}.`
         }
-        if (!isColumnValid) {
+        if (!this.#getIsColumnValid(column)) {
           message += ` The column number must be >= 0 and <= ${this.board[0].length - 1}.`
         }
         return createPlayerMoveFailedEvent({ message: message })
       }
+
+      const message = `The cell at row ${row} column ${column} is already occupied.`
+      return createPlayerMoveFailedEvent({ message: message })
     }
     return validatedMove
   }
