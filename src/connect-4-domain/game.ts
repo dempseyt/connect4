@@ -104,10 +104,15 @@ class GameFactory implements Game {
     ): PlayerMoveFailedEvent | PlayerMovedEvent {
       const {
         payload: {
+          player,
           targetCell: { row, column },
         },
       } = movePlayerCommand
 
+      if (this.getActivePlayer() !== player) {
+        const message = `Player ${player} cannot move as player ${this.getActivePlayer() === 1 ? 1 : 2} is currently active.`
+        return createPlayerMoveFailedEvent({ message: message })
+      }
       if (
         this.#getIsCellOnBoard(row, column) &&
         this.#getIsCellUnoccupied(row, column) &&
