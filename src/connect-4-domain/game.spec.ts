@@ -313,6 +313,40 @@ describe('game', () => {
             expect(game.getActivePlayer()).toBe(2)
           })
         })
+        describe('and the cell is occupied', () => {
+          it('the move fails', () => {
+            const game = new GameFactory({ boardDimensions: { rows: 1, columns: 2 } })
+
+            const playerMoveCommand1 = createMovePlayerCommand({
+              player: 1,
+              targetCell: {
+                row: 0,
+                column: 0,
+              },
+            })
+            game.move(playerMoveCommand1)
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+              "
+              |---|---|
+              | 1 |   |
+              |---|---|"
+            `)
+            const playerMoveCommand2 = createMovePlayerCommand({
+              player: 2,
+              targetCell: {
+                row: 0,
+                column: 0,
+              },
+            })
+            const playerMoveEvent = game.move(playerMoveCommand2)
+            expect(playerMoveEvent).toEqual({
+              type: 'PLAYER_MOVE_FAILED',
+              payload: {
+                message: 'The cell at row 0 column 0 is already occupied.',
+              },
+            })
+          })
+        })
       })
     })
   })
