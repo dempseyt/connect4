@@ -87,9 +87,15 @@ class GameFactory implements Game {
       } = movePlayerCommand
       const isRowValid = row >= 0 && row < this.board.length
       const isColumnValid = column >= 0 && column < this.board[0].length
-      const isMoveValid = isRowValid && isColumnValid
-      if (isMoveValid) {
-        return moveFunction(movePlayerCommand)
+      const isMoveValidPositionInBoard = isRowValid && isColumnValid
+      if (isMoveValidPositionInBoard) {
+        const isUnoccupied = this.board[row][column].player === undefined
+        if (isUnoccupied) {
+          return moveFunction(movePlayerCommand)
+        } else {
+          let message = `The cell at row ${row} column ${column} is already occupied.`
+          return createPlayerMoveFailedEvent({ message: message })
+        }
       } else {
         let message = `The cell at row ${row} column ${column} does not exist on the board.`
         if (!isRowValid) {
