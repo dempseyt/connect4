@@ -82,7 +82,7 @@ describe('parse-ascii-table', () => {
     })
   })
   describe('given an ascii table with 1 row and 2 columns', () => {
-    it.skip('returns a 1x2 asciiTable', () => {
+    it('returns a 1x2 asciiTable', () => {
       const asciiTable = `
 |---|---|
 | 1 | 2 |
