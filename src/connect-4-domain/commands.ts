@@ -1,12 +1,6 @@
-type TargetCell = {
-  row: number
-  column: number
-}
+import { PlayerMove } from '@/connect-4-domain/game'
 
-export type MovePlayerCommandPayload = {
-  player: 1 | 2
-  targetCell: TargetCell
-}
+export type MovePlayerCommandPayload = PlayerMove
 
 export enum CommandTypes {
   MOVE_PLAYER = 'MOVE_PLAYER',

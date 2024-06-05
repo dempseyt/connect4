@@ -1,13 +1,12 @@
 import { BoardCell } from '@/connect-4-ui/BoardCell'
 import deepClone from './deep-clone'
-import { MovePlayerCommand, MovePlayerCommandPayload } from './commands'
+import { MovePlayerCommand } from './commands'
 import {
   PlayerMoveFailedEvent,
   PlayerMovedEvent,
   createPlayerMoveFailedEvent,
   createPlayerMovedEvent,
 } from './events'
-import toAsciiTable from './to-ascii-table'
 
 export type BoardCell = {
   player: 1 | 2 | undefined
@@ -17,12 +16,20 @@ type GameParameters = {
   boardDimensions: BoardDimensions
 }
 
+export type PlayerMove = {
+  player: 1 | 2
+  targetCell: {
+    row: number
+    column: number
+  }
+}
+
 type BoardDimensions = {
   rows: number
   columns: number
 }
 
-type Board = Array<Array<BoardCell>>
+export type Board = Array<Array<BoardCell>>
 
 interface PlayerStats {
   playerNumber: 1 | 2
