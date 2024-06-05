@@ -37,7 +37,7 @@ describe('parse-ascii-table', () => {
         })
       })
       describe('with leading whitespace', () => {
-        it.skip('returns a 1x1 grid without trimming the leading whitespace', () => {
+        it('returns a 1x1 grid without trimming the leading whitespace', () => {
           const asciiTable = `
 |----|
 |  1 |
