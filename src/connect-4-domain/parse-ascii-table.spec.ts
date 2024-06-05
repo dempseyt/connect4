@@ -28,7 +28,7 @@ describe('parse-ascii-table', () => {
         expect(parseAsciiTable(asciiTable)).toEqual([['1']])
       })
       describe('with trailing whitespace', () => {
-        it.skip('returns a 1x1 grid, trimming trailing whitespace', () => {
+        it('returns a 1x1 grid, trimming trailing whitespace', () => {
           const asciiTable = `
     |-----|
     | 1   |
