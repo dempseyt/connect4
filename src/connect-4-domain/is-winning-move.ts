@@ -22,7 +22,7 @@ function isVerticalWin(board: Board, playerMove: PlayerMove): { isWin: boolean }
 }
 
 function isHorizontalWin(board: Board, playerMove: PlayerMove): { isWin: boolean } {
-  if (board[0].length < 4) {
+  if (board[0].length < 4 || playerMove.targetCell.column < 3) {
     return { isWin: false }
   }
   const player = playerMove.player
@@ -33,8 +33,6 @@ function isHorizontalWin(board: Board, playerMove: PlayerMove): { isWin: boolean
     board[targetRow][targetColumn - 2].player === player &&
     board[targetRow][targetColumn - 3].player === player
   return { isWin }
-
-  // [[1,1,1,undefined], [2,2,2,undefined]]
 }
 
 function isWinningMove(board: Board, playerMove: PlayerMove): { isWin: boolean } {
