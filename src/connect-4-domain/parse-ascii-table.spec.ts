@@ -59,7 +59,7 @@ describe('parse-ascii-table', () => {
   })
   describe('given an ascii table with 2 rows and 1 column', () => {
     describe('where cells have content of the same size', () => {
-      it.skip('returns a 2x1 grid', () => {
+      it('returns a 2x1 grid', () => {
         const asciiTable = `
 |---|
 | 1 |
