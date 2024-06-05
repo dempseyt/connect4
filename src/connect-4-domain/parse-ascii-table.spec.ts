@@ -113,7 +113,7 @@ describe('parse-ascii-table', () => {
       ])
     })
     describe('and a custom cell resolver', () => {
-      it.skip('returns a 2x2 grid with resolved values', () => {
+      it('returns a 2x2 grid with resolved values', () => {
         const customResolver = (value: string): number | undefined => {
           const parsedValue = Number.parseInt(value)
           return Number.isNaN(parsedValue) ? undefined : parsedValue
