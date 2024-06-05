@@ -16,7 +16,6 @@ function parseAsciiTable<T>(
         return grid
       }
       const rowCells = row.split('|').filter((columnValue) => columnValue !== '')
-      console.log(rowCells)
       const rowContent: Array<T> = rowCells.reduce((columns: Array<T>, columnValue: string) => {
         columns.push(customResolver(columnValue))
         return columns
