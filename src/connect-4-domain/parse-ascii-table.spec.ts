@@ -100,7 +100,7 @@ describe('parse-ascii-table', () => {
     })
   })
   describe('given a 2x2 ascii table', () => {
-    it.skip('returns a 2x2 grid', () => {
+    it('returns a 2x2 grid', () => {
       const asciiTable = `
 |----|----|
 |  1 |    |
