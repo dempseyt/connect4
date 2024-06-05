@@ -15,15 +15,18 @@ function parseAsciiTable<T>(
       if (currentIndex % 2 === 0) {
         return grid
       }
-      const rowCells = row.split('|')
+      const rowCells = row.split('|').filter((columnValue) => columnValue !== '')
+      console.log(rowCells)
+      const rowContent: Array<T> = rowCells.reduce((columns: Array<T>, columnValue: string) => {
+        columns.push(customResolver(columnValue))
+        return columns
+      }, [] as Array<T>)
 
-      const cellContent: string = rowCells[1]
-
-      grid.push([customResolver(cellContent)])
+      grid.push(rowContent)
 
       return [...grid]
     },
-    [],
+    [] as Array<Array<T>>,
   )
   return grid
 }
