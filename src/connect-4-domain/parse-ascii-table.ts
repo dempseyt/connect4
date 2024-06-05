@@ -1,5 +1,5 @@
 function defaultResolver(value: string): string | undefined {
-  return value.length === 0 ? undefined : value
+  return value.trim().length === 0 ? undefined : value.trimEnd().slice(1)
 }
 
 function parseAsciiTable<T>(
@@ -17,7 +17,8 @@ function parseAsciiTable<T>(
       }
       const rowCells = row.split('|')
 
-      const cellContent: string = rowCells[currentIndex].trimEnd().slice(1)
+      const cellContent: string = rowCells[1]
+
       grid.push([customResolver(cellContent)])
 
       return [...grid]
