@@ -65,6 +65,29 @@ describe('is-winning-move', () => {
           })
         })
       })
+      describe('and there are less than 3 columns to the left of the target cell', () => {
+        describe('and there are no player tokens to the right hand side of the target cell', () => {
+          it('does not detect a win', () => {
+            const asciiTable = `
+|---|---|---|---|
+| 1 |   |   |   |
+|---|---|---|---|
+| 2 |   |   |   |
+|---|---|---|---|`
+            const board = parseAsciiTable(asciiTable, customResolver)
+            const playerMove = {
+              player: 1,
+              targetCell: {
+                row: 0,
+                column: 1,
+              },
+            } as PlayerMove
+            expect(isWinningMove(board, playerMove)).toEqual({
+              isWin: false,
+            })
+          })
+        })
+      })
     })
     describe('and there are less than 4 rows on the board', () => {
       it('does not result in a win', () => {
