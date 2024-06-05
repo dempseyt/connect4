@@ -16,7 +16,7 @@ function parseAsciiTable(asciiTable: string): Array<Array<string | undefined>> {
       if (rowCells[1].trim().length === 0) {
         grid.push([undefined])
       } else {
-        grid.push([rowCells[currentIndex].trim()])
+        grid.push([rowCells[currentIndex].trimEnd().slice(1)])
       }
       return [...grid]
     },
