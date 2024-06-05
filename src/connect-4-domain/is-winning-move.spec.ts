@@ -1,7 +1,7 @@
 import { expect, describe, it } from 'vitest'
 import parseAsciiTable from './parse-ascii-table'
 import isWinningMove from '@/connect-4-domain/is-winning-move'
-import { BoardCell, PlayerMove } from '@/connect-4-domain/game'
+import { Board, BoardCell, PlayerMove } from '@/connect-4-domain/game'
 
 describe('is-winning-move', () => {
   const customResolver = (value: string): BoardCell => {
@@ -43,8 +43,31 @@ describe('is-winning-move', () => {
         )
       })
     })
+    describe('results in a horizontal win', () => {
+      describe('and there are 3 of the active players tokens to the left of the target cell', () => {
+        it('detects the win', () => {
+          const asciiTable = `
+|---|---|---|---|
+| 1 | 1 | 1 |   |
+|---|---|---|---|
+| 2 | 2 | 2 |   |
+|---|---|---|---|`
+          const board = parseAsciiTable(asciiTable, customResolver)
+          const playerMove = {
+            player: 1,
+            targetCell: {
+              row: 0,
+              column: 3,
+            },
+          } as PlayerMove
+          expect(isWinningMove(board, playerMove)).toEqual({
+            isWin: true,
+          })
+        })
+      })
+    })
     describe('and there are less than 4 rows on the board', () => {
-      it.only('does not result in a win', () => {
+      it('does not result in a win', () => {
         const playerMove = {
           player: 1,
           targetCell: {
