@@ -46,7 +46,7 @@ describe('parse-ascii-table', () => {
         })
       })
       describe('and a custom cell-resolver', () => {
-        it.skip('returns a 1x1 grid with a resolved value', () => {
+        it('returns a 1x1 grid with a resolved value', () => {
           const customResolver = (value: string) => Number(value)
           const asciiTable = `
 |---|
