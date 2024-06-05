@@ -67,5 +67,36 @@ describe('is-winning-move', () => {
         })
       })
     })
+    describe('and the winning column does not touch the board ceiling', () => {
+      describe('and the players move results in a vertical win', () => {
+        it('detects the win', () => {
+          const asciiTable = `
+|---|---|
+| 1 | 2 |
+|---|---| 
+| 1 | 2 |
+|---|---| 
+| 1 | 2 |
+|---|---| 
+|   |   |
+|---|---|
+|   |   |
+|---|---|`
+          const board = parseAsciiTable(asciiTable, customResolver)
+          const playerMove = {
+            player: 1,
+            targetCell: {
+              row: 3,
+              column: 0,
+            },
+          } as PlayerMove
+          expect(isWinningMove(board, playerMove)).toEqual(
+            expect.objectContaining({
+              isWin: true,
+            }),
+          )
+        })
+      })
+    })
   })
 })
