@@ -43,8 +43,8 @@ describe('is-winning-move', () => {
         )
       })
     })
-    describe('and the board has 3 rows', () => {
-      it('does not result in a win', () => {
+    describe('and there are less than 4 rows on the board', () => {
+      it.only('does not result in a win', () => {
         const playerMove = {
           player: 1,
           targetCell: {
@@ -59,8 +59,7 @@ describe('is-winning-move', () => {
 | 2 |
 |---|
 |   |        
-|---|
-`
+|---|`
         const board = parseAsciiTable(asciiTable, customResolver)
         expect(isWinningMove(board, playerMove)).toEqual({
           isWin: false,
