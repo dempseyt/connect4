@@ -70,7 +70,7 @@ describe('parse-ascii-table', () => {
       })
     })
     describe('where cells have content of a differing size', () => {
-      it.skip('returns a 2x1 grid', () => {
+      it('returns a 2x1 grid', () => {
         const asciiTable = `
 |----|
 | 1  |
