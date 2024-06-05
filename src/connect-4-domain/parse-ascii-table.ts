@@ -1,6 +1,10 @@
+function defaultResolver(value: string): string | undefined {
+  return value.length === 0 ? undefined : value
+}
+
 function parseAsciiTable<T>(
   asciiTable: string,
-  customResolver: (value: string) => T = (value: string) => value as T,
+  customResolver: (value: string) => T = defaultResolver as (value: string) => T,
 ): Array<Array<T>> {
   if (asciiTable.length === 0) {
     return []
@@ -12,12 +16,10 @@ function parseAsciiTable<T>(
         return grid
       }
       const rowCells = row.split('|')
-      if (rowCells[1].trim().length === 0) {
-        grid.push([undefined as T])
-      } else {
-        const cellContent: string = rowCells[currentIndex].trimEnd().slice(1)
-        grid.push([customResolver(cellContent)])
-      }
+
+      const cellContent: string = rowCells[currentIndex].trimEnd().slice(1)
+      grid.push([customResolver(cellContent)])
+
       return [...grid]
     },
     [],
