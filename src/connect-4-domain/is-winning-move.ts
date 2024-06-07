@@ -1,5 +1,83 @@
 import { Board, BoardCell, PlayerMove } from './game'
 
+function getTargetCell(playerMove: PlayerMove): { targetRow: number; targetColumn: number } {
+  return {
+    targetRow: playerMove.targetCell.row,
+    targetColumn: playerMove.targetCell.column,
+  }
+}
+
+function getThreeDisksToLeftOfTargetCell(
+  board: Board,
+  playerMove: PlayerMove,
+): Array<number | undefined> {
+  const { targetRow, targetColumn } = getTargetCell(playerMove)
+  const distanceFromLeft = playerMove.targetCell.column
+  switch (distanceFromLeft) {
+    case 0: {
+      return []
+    }
+    case 1:
+      return [board[targetRow][targetColumn - 1].player]
+    case 2:
+      return [board[targetRow][targetColumn - 1].player, board[targetRow][targetColumn - 2].player]
+    default:
+      return [
+        board[targetRow][targetColumn - 1].player,
+        board[targetRow][targetColumn - 2].player,
+        board[targetRow][targetColumn - 3].player,
+      ]
+  }
+}
+
+function getThreeDisksToRightOfTargetCell(
+  board: Board,
+  playerMove: PlayerMove,
+): Array<number | undefined> {
+  const { targetRow, targetColumn } = getTargetCell(playerMove)
+  const onTheEdgeOfBoard = board[0].length - 1
+  const oneFromTheEdgeOfBoard = board[0].length - 2
+  const twoFromTheEdgeOfBoard = board[0].length - 3
+  if (targetColumn === onTheEdgeOfBoard) {
+    return []
+  } else if (targetColumn === oneFromTheEdgeOfBoard) {
+    return [board[targetRow][targetColumn + 1].player]
+  } else if (targetColumn === twoFromTheEdgeOfBoard) {
+    return [board[targetRow][targetColumn + 1].player, board[targetRow][targetColumn + 2].player]
+  } else {
+    return [
+      board[targetRow][targetColumn + 1].player,
+      board[targetRow][targetColumn + 2].player,
+      board[targetRow][targetColumn + 3].player,
+    ]
+  }
+}
+
+function isHorizontalWin(board: Board, playerMove: PlayerMove): { isWin: boolean } {
+  if (board[0].length < 3) {
+    return { isWin: false }
+  }
+  const player = playerMove.player
+  const threeDisksToLeftAndRightOfTargetCell: Array<number | undefined> = [
+    ...getThreeDisksToLeftOfTargetCell(board, playerMove),
+    ...getThreeDisksToRightOfTargetCell(board, playerMove),
+  ]
+  let count = 0
+  const isWin = threeDisksToLeftAndRightOfTargetCell.reduce(
+    (isWinningMove: boolean, currentCell: number | undefined): boolean => {
+      if (currentCell === player) {
+        count++
+      } else {
+        count = 0
+      }
+      if (count === 3) return isWinningMove
+      return !isWinningMove
+    },
+    true,
+  )
+  return { isWin }
+}
+
 function isVerticalWin(board: Board, playerMove: PlayerMove): { isWin: boolean } {
   if (board.length < 4) {
     return { isWin: false }
@@ -19,40 +97,6 @@ function isVerticalWin(board: Board, playerMove: PlayerMove): { isWin: boolean }
   return {
     isWin,
   }
-}
-
-function isLeftHorizontalWin(board: Board, playerMove: PlayerMove) {
-  if (board[0].length < 4 || playerMove.targetCell.column < 3) {
-    return { isWin: false }
-  }
-  const player = playerMove.player
-  const targetRow = playerMove.targetCell.row
-  const targetColumn = playerMove.targetCell.column
-  const isWin =
-    board[targetRow][targetColumn - 1].player === player &&
-    board[targetRow][targetColumn - 2].player === player &&
-    board[targetRow][targetColumn - 3].player === player
-  return { isWin }
-}
-
-function isRightHorizontalWin(board: Board, playerMove: PlayerMove) {
-  if (board[0].length < 4 || playerMove.targetCell.column > board[0].length - 3) {
-    return { isWin: false }
-  }
-  const player = playerMove.player
-  const targetRow = playerMove.targetCell.row
-  const targetColumn = playerMove.targetCell.column
-  const isWin =
-    board[targetRow][targetColumn + 1].player === player &&
-    board[targetRow][targetColumn + 2].player === player &&
-    board[targetRow][targetColumn + 3].player === player
-  return { isWin }
-}
-
-function isHorizontalWin(board: Board, playerMove: PlayerMove): { isWin: boolean } {
-  const isWin =
-    isLeftHorizontalWin(board, playerMove).isWin || isRightHorizontalWin(board, playerMove).isWin
-  return { isWin }
 }
 
 function isWinningMove(board: Board, playerMove: PlayerMove): { isWin: boolean } {
