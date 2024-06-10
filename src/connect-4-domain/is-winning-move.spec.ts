@@ -230,7 +230,7 @@ describe('is-winning-move', () => {
     describe('that is bottom-left to top-right', () => {
       describe('given a board and the next players move', () => {
         describe('with 3 of the moving players discs to the left of the target cell', () => {
-          it.skip('detects the win', () => {
+          it('detects the win', () => {
             const asciiTable = `
 |---|---|---|---|
 | 1 |   |   |   |
