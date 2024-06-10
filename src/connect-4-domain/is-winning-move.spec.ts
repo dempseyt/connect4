@@ -15,35 +15,8 @@ describe('is-winning-move', () => {
       player: undefined,
     }
   }
-  describe('given a board and the next players move', () => {
-    describe('results in a vertical win', () => {
-      it('detects the win', () => {
-        const asciiTable = `
-|---|---|
-| 1 | 2 |
-|---|---| 
-| 1 | 2 |
-|---|---| 
-| 1 | 2 |
-|---|---| 
-|   |   |
-|---|---|`
-        const board = parseAsciiTable(asciiTable, customResolver)
-        const playerMove = {
-          player: 1,
-          targetCell: {
-            row: 3,
-            column: 0,
-          },
-        } as PlayerMove
-        expect(isWinningMove(board, playerMove)).toEqual(
-          expect.objectContaining({
-            isWin: true,
-          }),
-        )
-      })
-    })
-    describe('results in a horizontal win', () => {
+  describe('checking for a horizontal win', () => {
+    describe('given a board and the next players move', () => {
       describe('and there are 3 of the moving players tokens to the left of the target cell', () => {
         it('detects the win', () => {
           const asciiTable = `
@@ -163,29 +136,8 @@ describe('is-winning-move', () => {
         })
       })
     })
-    describe('and there are less than 4 rows on the board', () => {
-      it('does not result in a win', () => {
-        const playerMove = {
-          player: 1,
-          targetCell: {
-            row: 2,
-            column: 0,
-          },
-        } as PlayerMove
-        const asciiTable = `
-|---|
-| 1 |
-|---|
-| 2 |
-|---|
-|   |        
-|---|`
-        const board = parseAsciiTable(asciiTable, customResolver)
-        expect(isWinningMove(board, playerMove)).toEqual({
-          isWin: false,
-        })
-      })
-    })
+  })
+  describe('checking for a vertical win', () => {
     describe('and the winning column does not touch the board ceiling', () => {
       describe('and the players move results in a vertical win', () => {
         it('detects the win', () => {
@@ -214,6 +166,60 @@ describe('is-winning-move', () => {
               isWin: true,
             }),
           )
+        })
+      })
+    })
+    describe('given a board and the next players move', () => {
+      describe('and there are 3 of the moving players tokens beneath the target cell', () => {
+        it('detects the win', () => {
+          const asciiTable = `
+|---|---|
+| 1 | 2 |
+|---|---| 
+| 1 | 2 |
+|---|---| 
+| 1 | 2 |
+|---|---| 
+|   |   |
+|---|---|`
+          const board = parseAsciiTable(asciiTable, customResolver)
+          const playerMove = {
+            player: 1,
+            targetCell: {
+              row: 3,
+              column: 0,
+            },
+          } as PlayerMove
+          expect(isWinningMove(board, playerMove)).toEqual(
+            expect.objectContaining({
+              isWin: true,
+            }),
+          )
+        })
+      })
+    })
+  })
+  describe('given a board and the next players move', () => {
+    describe('and there are less than 4 rows on the board', () => {
+      it('does not result in a win', () => {
+        const playerMove = {
+          player: 1,
+          targetCell: {
+            row: 2,
+            column: 0,
+          },
+        } as PlayerMove
+        const asciiTable = `
+|---|
+| 1 |
+|---|
+| 2 |
+|---|
+|   |        
+|---|`
+        const board = parseAsciiTable(asciiTable, customResolver)
+        expect(isWinningMove(board, playerMove)).toEqual({
+          isWin: false,
         })
       })
     })
