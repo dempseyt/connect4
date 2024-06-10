@@ -1,7 +1,7 @@
-import { expect, describe, it } from 'vitest'
-import parseAsciiTable from './parse-ascii-table'
+import { BoardCell, PlayerMove } from '@/connect-4-domain/game'
 import isWinningMove from '@/connect-4-domain/is-winning-move'
-import { Board, BoardCell, PlayerMove } from '@/connect-4-domain/game'
+import { describe, expect, it } from 'vitest'
+import parseAsciiTable from './parse-ascii-table'
 
 describe('is-winning-move', () => {
   const customResolver = (value: string): BoardCell => {
