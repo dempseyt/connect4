@@ -45,6 +45,7 @@ function isVerticalWin(board: Board, playerMove: PlayerMove): { isWin: boolean }
     playerMove.targetCell.row - 4,
     playerMove.targetCell.row - 1,
   )
+  console.log(threeCellsBelowPlayerMove)
   const isWin = threeCellsBelowPlayerMove.reduce(
     (isWinningMove: boolean, currentRow: Array<BoardCell>): boolean => {
       const column = playerMove.targetCell.column
