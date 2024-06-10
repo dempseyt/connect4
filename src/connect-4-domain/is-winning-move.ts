@@ -41,12 +41,14 @@ function isVerticalWin(board: Board, playerMove: PlayerMove): { isWin: boolean }
   if (board.length < 4) {
     return { isWin: false }
   }
-  const threeCellsBelowPlayerMove = board.slice(
-    playerMove.targetCell.row - 4,
-    playerMove.targetCell.row - 1,
-  )
-  console.log(threeCellsBelowPlayerMove)
-  const isWin = threeCellsBelowPlayerMove.reduce(
+  const targetRow = playerMove.targetCell.row
+  const startIndex = Math.max(targetRow - 3, 0)
+  const endIndex = targetRow
+  const upToThreeCellsBelowTargetCell = board.slice(startIndex, endIndex)
+  if (upToThreeCellsBelowTargetCell.length < 3) {
+    return { isWin: false }
+  }
+  const isWin = upToThreeCellsBelowTargetCell.reduce(
     (isWinningMove: boolean, currentRow: Array<BoardCell>): boolean => {
       const column = playerMove.targetCell.column
       const player = playerMove.player

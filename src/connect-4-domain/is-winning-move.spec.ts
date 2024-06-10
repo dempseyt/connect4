@@ -197,9 +197,11 @@ describe('is-winning-move', () => {
           )
         })
       })
-      describe('and the column contains less than 3 of the moving players token', () => {
+      describe('and the column does not contain 3 of the moving players tokens separated by a single empty cell', () => {
         it('does not detect a win', () => {
           const asciiTable = `
+|---|
+| 1 |
 |---|
 | 1 |
 |---|
@@ -207,13 +209,13 @@ describe('is-winning-move', () => {
 |---|
 |   |
 |---|
-|   |
+| 1 |
 |---|`
           const board = parseAsciiTable(asciiTable, customResolver)
           const playerMove = {
             player: 1,
             targetCell: {
-              row: 1,
+              row: 2,
               column: 0,
             },
           } as PlayerMove
