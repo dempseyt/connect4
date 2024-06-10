@@ -254,6 +254,31 @@ describe('is-winning-move', () => {
             )
           })
         })
+        describe('where 2 of the moving players tokens are on a BL-TR line to the left of the target cell and 1 of the moving players tokens continues the line', () => {
+          it('detects the win', () => {
+            const asciiTable = `
+|---|---|---|---|
+| 1 |   |   |   |
+|---|---|---|---|
+|   | 1 |   |   |
+|---|---|---|---|
+|   |   |   |   |
+|---|---|---|---|
+|   |   |   | 1 |
+|---|---|---|---|`
+            const board = parseAsciiTable(asciiTable, customResolver)
+            const playerMove = {
+              player: 1,
+              targetCell: {
+                row: 2,
+                column: 2,
+              },
+            } satisfies PlayerMove
+            expect(isWinningMove(board, playerMove)).toEqual(
+              expect.objectContaining({ isWin: true }),
+            )
+          })
+        })
       })
     })
     describe.todo('that is top-left to bottom-right', () => {})
