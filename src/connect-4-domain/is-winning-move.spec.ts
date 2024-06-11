@@ -304,6 +304,31 @@ describe('is-winning-move', () => {
             )
           })
         })
+        describe('with 1 of the moving players disks are to the left and 2 of the moving players disks to the right', () => {
+          it('detects the win', () => {
+            const asciiTable = `
+|---|---|---|---|
+| 1 |   |   |   |
+|---|---|---|---|
+|   |   |   |   |
+|---|---|---|---|
+|   |   | 1 |   |
+|---|---|---|---|
+|   |   |   | 1 |
+|---|---|---|---|`
+            const board = parseAsciiTable(asciiTable, customResolver)
+            const playerMove = {
+              player: 1,
+              targetCell: {
+                row: 1,
+                column: 1,
+              },
+            } satisfies PlayerMove
+            expect(isWinningMove(board, playerMove)).toEqual(
+              expect.objectContaining({ isWin: true }),
+            )
+          })
+        })
       })
     })
     describe('that is top-left to bottom-right', () => {
