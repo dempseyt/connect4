@@ -254,7 +254,7 @@ describe('is-winning-move', () => {
             )
           })
         })
-        describe('where 2 of the moving players tokens are on a BL-TR line to the left of the target cell and 1 of the moving players tokens continues the line', () => {
+        describe('where 2 of the moving players tokens are to the left and 1 moving players tokens to the right', () => {
           it('detects the win', () => {
             const asciiTable = `
 |---|---|---|---|

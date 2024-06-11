@@ -1,12 +1,18 @@
 import { Board, BoardCell, PlayerMove } from './game'
 
-function getThreeDisksToLeftOfTargetCell(board: Board, playerMove: PlayerMove): Array<BoardCell> {
+function getThreeDisksHorizontallyToLeftOfTargetCell(
+  board: Board,
+  playerMove: PlayerMove,
+): Array<BoardCell> {
   const columnIndex = playerMove.targetCell.column
   const leftStartIndex = Math.max(columnIndex - 3, 0)
   return board[playerMove.targetCell.row].slice(leftStartIndex, columnIndex)
 }
 
-function getThreeDisksToRightOfTargetCell(board: Board, playerMove: PlayerMove): Array<BoardCell> {
+function getThreeDisksHorizontallyToRightOfTargetCell(
+  board: Board,
+  playerMove: PlayerMove,
+): Array<BoardCell> {
   const columnIndex = playerMove.targetCell.column
   const rightEndIndex = Math.min(board[0].length, columnIndex + 3)
   return board[playerMove.targetCell.row].slice(columnIndex + 1, rightEndIndex)
@@ -21,8 +27,8 @@ function isHorizontalWin(board: Board, playerMove: PlayerMove): { isWin: boolean
     return { isWin: false }
   }
   const accumulatedCellsAroundTargetCell: Array<BoardCell> = [
-    ...getThreeDisksToLeftOfTargetCell(board, playerMove),
-    ...getThreeDisksToRightOfTargetCell(board, playerMove),
+    ...getThreeDisksHorizontallyToLeftOfTargetCell(board, playerMove),
+    ...getThreeDisksHorizontallyToRightOfTargetCell(board, playerMove),
   ]
   const activePlayer = playerMove.player
   let count = 0
@@ -60,6 +66,54 @@ function isVerticalWin(board: Board, playerMove: PlayerMove): { isWin: boolean }
   }
 }
 
+function getTargetCell(playerMove: PlayerMove) {
+  const {
+    targetCell: { row, column },
+  } = playerMove
+  return { row, column }
+}
+
+function getThreeDisksDiagonallyLeftDownFromTargetCell(board: Board, playerMove: PlayerMove) {
+  const { row: targetRow, column: targetColumn } = getTargetCell(playerMove)
+  const lowestValidIndex = Math.max(Math.max(targetColumn - 3, targetRow - 3), 0)
+  const numberOfCellsBackFromTargetCell = targetColumn - lowestValidIndex
+  switch (numberOfCellsBackFromTargetCell) {
+    case 0:
+      return []
+    case 1:
+      return [board[targetRow - 1][targetColumn - 1]]
+    case 2:
+      return [board[targetRow - 1][targetColumn - 1], board[targetRow - 2][targetColumn - 2]]
+    default:
+      return [
+        board[targetRow - 1][targetColumn - 1],
+        board[targetRow - 2][targetColumn - 2],
+        board[targetRow - 3][targetColumn - 3],
+      ]
+  }
+}
+
+function getThreeDisksDiagonallyRightUpFromTargetCell(board: Board, playerMove: PlayerMove) {
+  const { row: targetRow, column: targetColumn } = getTargetCell(playerMove)
+  const horizontalDimension = Math.min(board[0].length - 1, targetColumn + 3) - targetColumn
+  const verticalDimension = Math.min(board.length - 1, targetRow + 3) - targetRow
+  const numberOfCellsForwardFromTargetCell = Math.min(horizontalDimension, verticalDimension)
+  switch (numberOfCellsForwardFromTargetCell) {
+    case 0:
+      return []
+    case 1:
+      return [board[targetRow + 1][targetColumn + 1]]
+    case 2:
+      return [board[targetRow + 1][targetColumn + 1], board[targetRow + 2][targetColumn + 2]]
+    default:
+      return [
+        board[targetRow + 1][targetColumn + 1],
+        board[targetRow + 2][targetColumn + 2],
+        board[targetRow + 3][targetColumn + 3],
+      ]
+  }
+}
+
 function isDiagonalWin(board: Board, playerMove: PlayerMove): { isWin: boolean } {
   if (board.length < 4 || board[0].length < 4) {
     return { isWin: false }
@@ -67,17 +121,30 @@ function isDiagonalWin(board: Board, playerMove: PlayerMove): { isWin: boolean }
   const targetRow = playerMove.targetCell.row
   const targetColumn = playerMove.targetCell.column
   const activePlayer = playerMove.player
-  const tokensToTheLeft = [
-    board[targetRow - 1][targetColumn - 1],
-    board[targetRow - 2][targetColumn - 2],
-    board[targetRow - 3][targetColumn - 3],
+  const threeDisksDiagonallyLeftDownFromTargetCell = getThreeDisksDiagonallyLeftDownFromTargetCell(
+    board,
+    playerMove,
+  )
+  const threeDisksDiagonallyRightUpFromTargetCell = getThreeDisksDiagonallyRightUpFromTargetCell(
+    board,
+    playerMove,
+  )
+  const bottomLeftTopRight = [
+    ...threeDisksDiagonallyLeftDownFromTargetCell,
+    ...threeDisksDiagonallyRightUpFromTargetCell,
   ]
-  for (const currentCell of tokensToTheLeft) {
-    if (currentCell.player !== activePlayer) {
-      return { isWin: false }
-    }
-  }
-  return { isWin: true }
+
+  let count = 0
+  const isWin = bottomLeftTopRight.reduce(
+    (isWinningMove: boolean, currentCell: BoardCell): boolean => {
+      getIsCellOccupiedByPlayer(currentCell, activePlayer) ? count++ : (count = 0)
+      if (count === 3) return isWinningMove
+      return !isWinningMove
+    },
+    true,
+  )
+
+  return { isWin }
 }
 
 function isWinningMove(board: Board, playerMove: PlayerMove): { isWin: boolean } {
