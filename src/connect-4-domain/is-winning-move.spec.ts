@@ -435,6 +435,33 @@ describe('is-winning-move', () => {
             )
           })
         })
+        describe('with 1 of the moving players discs to the left and 2 of the moving players discs to the right of the target cell', () => {
+          it('detects the win', () => {
+            const asciiTable = `
+|---|---|---|---|---|
+|   |   |   | 2 |   |
+|---|---|---|---|---|
+|   |   |   |   |   |
+|---|---|---|---|---|
+|   | 2 |   |   |   |
+|---|---|---|---|---|
+| 2 |   |   |   |   |
+|---|---|---|---|---|
+|   |   |   |   |   |
+|---|---|---|---|---|`
+            const board = parseAsciiTable(asciiTable, customResolver)
+            const playerMove = {
+              player: 2,
+              targetCell: {
+                row: 1,
+                column: 2,
+              },
+            } satisfies PlayerMove
+            expect(isWinningMove(board, playerMove)).toEqual(
+              expect.objectContaining({ isWin: true }),
+            )
+          })
+        })
       })
     })
   })
