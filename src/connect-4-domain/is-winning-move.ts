@@ -75,8 +75,9 @@ function getTargetCell(playerMove: PlayerMove) {
 
 function getThreeDisksDiagonallyLeftDownFromTargetCell(board: Board, playerMove: PlayerMove) {
   const { row: targetRow, column: targetColumn } = getTargetCell(playerMove)
-  const lowestValidIndex = Math.max(Math.max(targetColumn - 3, targetRow - 3), 0)
-  const numberOfCellsBackFromTargetCell = targetColumn - lowestValidIndex
+  const horizontalDimension = Math.max(0, targetColumn - 3) + targetColumn
+  const verticalDimension = Math.max(0, targetRow - 3) + targetRow
+  const numberOfCellsBackFromTargetCell = Math.min(horizontalDimension, verticalDimension)
   switch (numberOfCellsBackFromTargetCell) {
     case 0:
       return []
@@ -114,10 +115,51 @@ function getThreeDisksDiagonallyRightUpFromTargetCell(board: Board, playerMove: 
   }
 }
 
-function isDiagonalWin(board: Board, playerMove: PlayerMove): { isWin: boolean } {
-  if (board.length < 4 || board[0].length < 4) {
-    return { isWin: false }
+function getThreeDisksDiagonallyLeftUpFromTargetCell(board: Board, playerMove: PlayerMove) {
+  const { row: targetRow, column: targetColumn } = getTargetCell(playerMove)
+  const horizontalDimension = Math.max(0, targetColumn - 3) + targetColumn
+  const verticalDimension = Math.min(board.length - 1, targetRow + 3) - targetRow
+  const numberOfCellsBackFromTargetCell = Math.min(horizontalDimension, verticalDimension)
+
+  switch (numberOfCellsBackFromTargetCell) {
+    case 0:
+      return []
+    case 1:
+      return [board[targetRow + 1][targetColumn - 1]]
+    case 2:
+      return [board[targetRow + 1][targetColumn - 1], board[targetRow + 2][targetColumn - 2]]
+    default:
+      return [
+        board[targetRow + 1][targetColumn - 1],
+        board[targetRow + 2][targetColumn - 2],
+        board[targetRow + 3][targetColumn - 3],
+      ]
   }
+}
+
+function getThreeDisksDiagonallyRightDownFromTargetCell(board: Board, playerMove: PlayerMove) {
+  const { row: targetRow, column: targetColumn } = getTargetCell(playerMove)
+  const horizontalDimension = Math.min(board[0].length - 1, targetColumn + 3) - targetColumn
+  const verticalDimension = Math.max(0, targetRow - 3) + targetRow
+  const numberOfCellsForwardFromTargetCell = Math.min(horizontalDimension, verticalDimension)
+
+  switch (numberOfCellsForwardFromTargetCell) {
+    case 0:
+      return []
+    case 1:
+      return [board[targetRow - 1][targetColumn + 1]]
+    case 2:
+      return [board[targetRow - 1][targetColumn + 1], board[targetRow - 2][targetColumn + 2]]
+    default:
+      return [
+        board[targetRow - 1][targetColumn + 1],
+        board[targetRow - 2][targetColumn + 2],
+        board[targetRow - 3][targetColumn + 3],
+      ]
+  }
+}
+
+function isDiagonalBottomLeftTopRightWin(board: Board, playerMove: PlayerMove): boolean {
   const activePlayer = playerMove.player
   const threeDisksDiagonallyLeftDownFromTargetCell = getThreeDisksDiagonallyLeftDownFromTargetCell(
     board,
@@ -141,8 +183,44 @@ function isDiagonalWin(board: Board, playerMove: PlayerMove): { isWin: boolean }
       count = 0
     }
   }
+  return count === 3
+}
 
-  return { isWin: count === 3 }
+function isDiagonalTopLeftBottomRightWin(board: Board, playerMove: PlayerMove): boolean {
+  const activePlayer = playerMove.player
+  const threeDisksDiagonallyLeftUpFromTargetCell = getThreeDisksDiagonallyLeftUpFromTargetCell(
+    board,
+    playerMove,
+  )
+  const threeDisksDiagonallyRightDownFromTargetCell =
+    getThreeDisksDiagonallyRightDownFromTargetCell(board, playerMove)
+
+  const topLeftBottomRight = [
+    ...threeDisksDiagonallyLeftUpFromTargetCell,
+    ...threeDisksDiagonallyRightDownFromTargetCell,
+  ]
+  let count = 0
+  for (const cell of topLeftBottomRight) {
+    if (cell.player === activePlayer) {
+      count++
+      if (count === 3) break
+    } else {
+      count = 0
+    }
+  }
+  return count === 3
+}
+
+function isDiagonalWin(board: Board, playerMove: PlayerMove): { isWin: boolean } {
+  if (board.length < 4 || board[0].length < 4) {
+    return { isWin: false }
+  }
+
+  return {
+    isWin:
+      isDiagonalBottomLeftTopRightWin(board, playerMove) ||
+      isDiagonalTopLeftBottomRightWin(board, playerMove),
+  }
 }
 
 function isWinningMove(board: Board, playerMove: PlayerMove): { isWin: boolean } {
