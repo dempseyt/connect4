@@ -17,7 +17,7 @@ describe('is-winning-move', () => {
   }
   describe('checking for a horizontal win', () => {
     describe('given a board and the next players move', () => {
-      describe('and there are 3 of the moving players tokens to the left of the target cell', () => {
+      describe('and there are 3 of the moving players disks to the left of the target cell', () => {
         it('detects the win', () => {
           const asciiTable = `
 |---|---|---|---|
@@ -38,7 +38,7 @@ describe('is-winning-move', () => {
           })
         })
       })
-      describe('and there are 3 of the moving players tokens to the right of the target cell', () => {
+      describe('and there are 3 of the moving players disks to the right of the target cell', () => {
         it('detects the win', () => {
           const asciiTable = `
 |---|---|---|---|
@@ -58,7 +58,7 @@ describe('is-winning-move', () => {
         })
       })
       describe('and there are less than 3 columns to the left of the target cell', () => {
-        describe('and there are no player tokens to the right hand side of the target cell', () => {
+        describe('and there are no player disks to the right hand side of the target cell', () => {
           it('does not detect a win', () => {
             const asciiTable = `
 |---|---|---|---|
@@ -101,7 +101,7 @@ describe('is-winning-move', () => {
           )
         })
       })
-      describe('and there are 2 of the moving players tokens to the left and 1 to the right of the target cell', () => {
+      describe('and there are 2 of the moving players disks to the left and 1 to the right of the target cell', () => {
         it('detects the win', () => {
           const asciiTable = `
 |---|---|---|---|
@@ -118,7 +118,7 @@ describe('is-winning-move', () => {
           expect(isWinningMove(board, playerMove)).toEqual(expect.objectContaining({ isWin: true }))
         })
       })
-      describe('and there is 1 of the moving player tokens to the left and 2 to the right of the target cell', () => {
+      describe('and there is 1 of the moving player disks to the left and 2 to the right of the target cell', () => {
         it('detects the win', () => {
           const asciiTable = `
 |---|---|---|---|
@@ -170,7 +170,7 @@ describe('is-winning-move', () => {
           })
         })
       })
-      describe('and there are 3 of the moving players tokens beneath the target cell', () => {
+      describe('and there are 3 of the moving players disks beneath the target cell', () => {
         it('detects the win', () => {
           const asciiTable = `
 |---|---|
@@ -197,7 +197,7 @@ describe('is-winning-move', () => {
           )
         })
       })
-      describe('and the column does not contain 3 of the moving players tokens separated by a single empty cell', () => {
+      describe('and the column does not contain 3 of the moving players disks separated by a single empty cell', () => {
         it('does not detect a win', () => {
           const asciiTable = `
 |---|
@@ -358,7 +358,7 @@ describe('is-winning-move', () => {
     })
     describe('that is top-left to bottom-right', () => {
       describe('given a board and the next players move', () => {
-        describe('with 3 of the moving players discs to the left of the target cell', () => {
+        describe('with 3 of the moving players disks to the left of the target cell', () => {
           it('detects the win', () => {
             const asciiTable = `
 |---|---|---|---|
@@ -383,7 +383,7 @@ describe('is-winning-move', () => {
             )
           })
         })
-        describe('with 3 of the moving players discs to the right of the target cell', () => {
+        describe('with 3 of the moving players disks to the right of the target cell', () => {
           it('detects the win', () => {
             const asciiTable = `
 |---|---|---|---|---|
@@ -408,7 +408,7 @@ describe('is-winning-move', () => {
             )
           })
         })
-        describe('with 2 of the moving players discs to the left and 1 of the moving players discs to the right of the target cell', () => {
+        describe('with 2 of the moving players disks to the left and 1 of the moving players disks to the right of the target cell', () => {
           it('detects the win', () => {
             const asciiTable = `
 |---|---|---|---|---|
@@ -435,7 +435,7 @@ describe('is-winning-move', () => {
             )
           })
         })
-        describe('with 1 of the moving players discs to the left and 2 of the moving players discs to the right of the target cell', () => {
+        describe('with 1 of the moving players disks to the left and 2 of the moving players disks to the right of the target cell', () => {
           it('detects the win', () => {
             const asciiTable = `
 |---|---|---|---|---|
@@ -459,6 +459,33 @@ describe('is-winning-move', () => {
             } satisfies PlayerMove
             expect(isWinningMove(board, playerMove)).toEqual(
               expect.objectContaining({ isWin: true }),
+            )
+          })
+        })
+        describe('with a winning move available and the current player moves elsewhere', () => {
+          it('does not detect the win', () => {
+            const asciiTable = `
+|---|---|---|---|---|
+|   |   |   | 2 |   |
+|---|---|---|---|---|
+|   |   |   |   |   |
+|---|---|---|---|---|
+|   | 2 |   |   |   |
+|---|---|---|---|---|
+| 2 |   |   |   |   |
+|---|---|---|---|---|
+|   |   |   |   |   |
+|---|---|---|---|---|`
+            const board = parseAsciiTable(asciiTable, customResolver)
+            const playerMove = {
+              player: 2,
+              targetCell: {
+                row: 4,
+                column: 0,
+              },
+            } satisfies PlayerMove
+            expect(isWinningMove(board, playerMove)).toEqual(
+              expect.objectContaining({ isWin: false }),
             )
           })
         })
