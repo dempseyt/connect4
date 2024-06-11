@@ -287,20 +287,20 @@ describe('is-winning-move', () => {
           it('detects the win', () => {
             const asciiTable = `
 |---|---|---|---|
-|   |   |   | 1 |
+|   |   |   |   |
 |---|---|---|---|
 |   |   | 1 |   |
 |---|---|---|---|
 |   | 1 |   |   |
 |---|---|---|---|
-|   |   |   |   |
+| 1 |   |   |   |
 |---|---|---|---|`
             const board = parseAsciiTable(asciiTable, customResolver)
             const playerMove = {
               player: 1,
               targetCell: {
-                row: 3,
-                column: 0,
+                row: 0,
+                column: 3,
               },
             } satisfies PlayerMove
             expect(isWinningMove(board, playerMove)).toEqual(
