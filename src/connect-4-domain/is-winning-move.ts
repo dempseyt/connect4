@@ -15,7 +15,7 @@ function getThreeDisksHorizontallyToRightOfTargetCell(
 ): Array<BoardCell> {
   const columnIndex = playerMove.targetCell.column
   const rightEndIndex = Math.min(board[0].length, columnIndex + 3)
-  return board[playerMove.targetCell.row].slice(columnIndex + 1, rightEndIndex)
+  return board[playerMove.targetCell.row].slice(columnIndex + 1, rightEndIndex + 1)
 }
 
 function getIsCellOccupiedByPlayer(currentCell: BoardCell, activePlayer: 1 | 2): boolean {
@@ -32,15 +32,15 @@ function isHorizontalWin(board: Board, playerMove: PlayerMove): { isWin: boolean
   ]
   const activePlayer = playerMove.player
   let count = 0
-  const isWin = accumulatedCellsAroundTargetCell.reduce(
-    (isWinningMove: boolean, currentCell: BoardCell): boolean => {
-      getIsCellOccupiedByPlayer(currentCell, activePlayer) ? count++ : (count = 0)
-      if (count === 3) return isWinningMove
-      return !isWinningMove
-    },
-    true,
-  )
-  return { isWin }
+  for (const cell of accumulatedCellsAroundTargetCell) {
+    if (cell.player === activePlayer) {
+      count++
+      if (count === 3) break
+    } else {
+      count = 0
+    }
+  }
+  return { isWin: count === 3 }
 }
 
 function isVerticalWin(board: Board, playerMove: PlayerMove): { isWin: boolean } {
@@ -118,8 +118,6 @@ function isDiagonalWin(board: Board, playerMove: PlayerMove): { isWin: boolean }
   if (board.length < 4 || board[0].length < 4) {
     return { isWin: false }
   }
-  const targetRow = playerMove.targetCell.row
-  const targetColumn = playerMove.targetCell.column
   const activePlayer = playerMove.player
   const threeDisksDiagonallyLeftDownFromTargetCell = getThreeDisksDiagonallyLeftDownFromTargetCell(
     board,
@@ -135,19 +133,24 @@ function isDiagonalWin(board: Board, playerMove: PlayerMove): { isWin: boolean }
   ]
 
   let count = 0
-  const isWin = bottomLeftTopRight.reduce(
-    (isWinningMove: boolean, currentCell: BoardCell): boolean => {
-      getIsCellOccupiedByPlayer(currentCell, activePlayer) ? count++ : (count = 0)
-      if (count === 3) return isWinningMove
-      return !isWinningMove
-    },
-    true,
-  )
+  for (const cell of bottomLeftTopRight) {
+    if (cell.player === activePlayer) {
+      count++
+      if (count === 3) break
+    } else {
+      count = 0
+    }
+  }
 
-  return { isWin }
+  return { isWin: count === 3 }
 }
 
 function isWinningMove(board: Board, playerMove: PlayerMove): { isWin: boolean } {
+  // console.log(
+  //   isVerticalWin(board, playerMove).isWin,
+  //   isHorizontalWin(board, playerMove).isWin,
+  //   isDiagonalWin(board, playerMove).isWin,
+  // )
   return {
     isWin:
       isVerticalWin(board, playerMove).isWin ||
