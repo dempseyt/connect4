@@ -171,7 +171,11 @@ class GameFactory implements Game {
   }: MovePlayerCommand): PlayerMovedEvent {
     const isWinningMove = getIsWinningMove(this.getBoard(), { player, targetCell: { row, column } })
     if (isWinningMove) {
-      this.status = this.activePlayer === player ? Status.PLAYER_ONE_WIN : Status.PLAYER_TWO_WIN
+      if (player === 1) {
+        this.status = Status.PLAYER_ONE_WIN
+      } else if (player === 2) {
+        this.status = Status.PLAYER_TWO_WIN
+      }
     }
     this.board[row][column] = { player }
     this.activePlayer = this.activePlayer === 1 ? 2 : 1
