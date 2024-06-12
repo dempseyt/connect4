@@ -1,6 +1,5 @@
-import { BoardCell } from '@/connect-4-ui/BoardCell'
-import deepClone from './deep-clone'
 import { MovePlayerCommand } from './commands'
+import deepClone from './deep-clone'
 import {
   PlayerMoveFailedEvent,
   PlayerMovedEvent,
@@ -10,6 +9,10 @@ import {
 
 export type BoardCell = {
   player: 1 | 2 | undefined
+}
+
+enum Status {
+  IN_PROGRESS = 'IN_PROGRESS',
 }
 
 type GameParameters = {
@@ -38,21 +41,28 @@ interface PlayerStats {
 
 type PlayerNumber = 1 | 2
 
+export class InvalidBoardDimensionsError extends RangeError {}
+
 interface Game {
   getBoard: () => ReadonlyArray<Array<BoardCell>>
+  getPlayerStats: (playerNumber: PlayerNumber) => PlayerStats
+  getStatus: () => Status
+  getActivePlayer: () => PlayerNumber
+  move: (movePlayerCommand: MovePlayerCommand) => PlayerMoveFailedEvent | PlayerMovedEvent
 }
-export class InvalidBoardDimensionsError extends RangeError {}
 
 class GameFactory implements Game {
   private board: Board
   private players: Record<PlayerNumber, PlayerStats>
-  private activePlayer: PlayerNumber | undefined
+  private activePlayer: PlayerNumber
+  private status: Status
 
   constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
     this.#validateBoardDimensions(boardDimensions)
     this.board = this.#createBoard(boardDimensions)
     this.players = this.#createPlayers(boardDimensions)
     this.activePlayer = 1
+    this.status = Status.IN_PROGRESS
   }
 
   #validateBoardDimensions(boardDimensions: BoardDimensions) {
@@ -168,11 +178,15 @@ class GameFactory implements Game {
     return deepClone(this.board)
   }
 
+  getStatus(): Status {
+    return this.status
+  }
+
   getPlayerStats(playerNumber: PlayerNumber): PlayerStats {
     return this.players[playerNumber]
   }
 
-  getActivePlayer() {
+  getActivePlayer(): PlayerNumber {
     return this.activePlayer
   }
 }
