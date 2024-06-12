@@ -16,6 +16,7 @@ enum Status {
   IN_PROGRESS = 'IN_PROGRESS',
   PLAYER_ONE_WIN = 'PLAYER_ONE_WIN',
   PLAYER_TWO_WIN = 'PLAYER_TWO_WIN',
+  DRAW = 'DRAW',
 }
 
 type GameParameters = {
@@ -170,12 +171,13 @@ class GameFactory implements Game {
     },
   }: MovePlayerCommand): PlayerMovedEvent {
     this.players[this.activePlayer].remainingDisks -= 1
-    const playerOneStats = this.getPlayerStats(1)
-    const playerTwoStats = this.getPlayerStats(2)
-    console.log(playerOneStats, playerTwoStats)
+    const playerOneRemainingDisks = this.getPlayerStats(1).remainingDisks
+    const playerTwoRemainingDisks = this.getPlayerStats(2).remainingDisks
     const isWinningMove = getIsWinningMove(this.getBoard(), { player, targetCell: { row, column } })
     if (isWinningMove.isWin) {
       this.status = player === 1 ? Status.PLAYER_ONE_WIN : Status.PLAYER_TWO_WIN
+    } else if (playerOneRemainingDisks === 0 && playerTwoRemainingDisks === 0) {
+      this.status = Status.DRAW
     }
     this.board[row][column] = { player }
     this.activePlayer = this.activePlayer === 1 ? 2 : 1
