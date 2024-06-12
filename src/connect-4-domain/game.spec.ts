@@ -598,7 +598,7 @@ describe('game', () => {
       })
     })
     describe('given the game has come to a draw', () => {
-      it.todo('reports the status of the game as a draw', () => {
+      it('reports the status of the game as a draw', () => {
         const game = new GameFactory({ boardDimensions: { rows: 1, columns: 4 } })
         const payloads = [
           { player: 1, targetCell: { row: 0, column: 0 } },
