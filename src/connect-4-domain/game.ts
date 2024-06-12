@@ -39,7 +39,7 @@ export type Board = Array<Array<BoardCell>>
 
 interface PlayerStats {
   playerNumber: 1 | 2
-  remainingDiscs: number
+  remainingDisks: number
 }
 
 type PlayerNumber = 1 | 2
@@ -89,8 +89,8 @@ class GameFactory implements Game {
   #createPlayers({ rows, columns }: BoardDimensions): Record<PlayerNumber, PlayerStats> {
     const calculateRemainingDiscs = (rows * columns) / 2
     return {
-      1: { playerNumber: 1, remainingDiscs: calculateRemainingDiscs },
-      2: { playerNumber: 2, remainingDiscs: calculateRemainingDiscs },
+      1: { playerNumber: 1, remainingDisks: calculateRemainingDiscs },
+      2: { playerNumber: 2, remainingDisks: calculateRemainingDiscs },
     }
   }
 
@@ -169,8 +169,12 @@ class GameFactory implements Game {
       targetCell: { row, column },
     },
   }: MovePlayerCommand): PlayerMovedEvent {
+    this.players[this.activePlayer].remainingDisks -= 1
+    const playerOneStats = this.getPlayerStats(1)
+    const playerTwoStats = this.getPlayerStats(2)
+    console.log(playerOneStats, playerTwoStats)
     const isWinningMove = getIsWinningMove(this.getBoard(), { player, targetCell: { row, column } })
-    if (isWinningMove) {
+    if (isWinningMove.isWin) {
       this.status = player === 1 ? Status.PLAYER_ONE_WIN : Status.PLAYER_TWO_WIN
     }
     this.board[row][column] = { player }
