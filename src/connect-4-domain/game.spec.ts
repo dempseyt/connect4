@@ -21,7 +21,7 @@ describe('game', () => {
       expect(game.getPlayerStats(1)).toEqual(
         expect.objectContaining({
           playerNumber: 1,
-          remainingDiscs: 21,
+          remainingDisks: 21,
         }),
       )
     })
@@ -30,7 +30,7 @@ describe('game', () => {
       expect(game.getPlayerStats(2)).toEqual(
         expect.objectContaining({
           playerNumber: 2,
-          remainingDiscs: 21,
+          remainingDisks: 21,
         }),
       )
     })
@@ -501,6 +501,14 @@ describe('game', () => {
         })
       })
     })
+    describe('given a valid move', () => {
+      it('decrements by one the moving players disks', () => {
+        const game = new GameFactory()
+        expect(game.getPlayerStats(1).remainingDisks).toBe(21)
+        game.move(createMovePlayerCommand({ player: 1, targetCell: { row: 0, column: 0 } }))
+        expect(game.getPlayerStats(1).remainingDisks).toBe(20)
+      })
+    })
   })
   describe('getting the status of the game', () => {
     describe('given a new game', () => {
@@ -587,6 +595,34 @@ describe('game', () => {
         `)
         const gameStatus = game.getStatus()
         expect(gameStatus).toEqual('PLAYER_TWO_WIN')
+      })
+    })
+    describe('given the game has come to a draw', () => {
+      it.todo('reports the status of the game as a draw', () => {
+        const game = new GameFactory({ boardDimensions: { rows: 1, columns: 4 } })
+        const payloads = [
+          { player: 1, targetCell: { row: 0, column: 0 } },
+          { player: 2, targetCell: { row: 0, column: 1 } },
+          { player: 1, targetCell: { row: 0, column: 2 } },
+          { player: 2, targetCell: { row: 0, column: 3 } },
+        ] satisfies MovePlayerCommandPayload[]
+        payloads.forEach(
+          R.pipe<
+            [MovePlayerCommandPayload],
+            MovePlayerCommand,
+            PlayerMovedEvent | PlayerMoveFailedEvent
+          >(createMovePlayerCommand, (playerMoveCommand: MovePlayerCommand) =>
+            game.move(playerMoveCommand),
+          ),
+        )
+        expect(R.pipe<[], Board, string>(() => game.getBoard(), toAsciiTable)())
+          .toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|
+          | 1 | 2 | 1 | 2 |
+          |---|---|---|---|"
+        `)
+        expect(game.getStatus()).toEqual('DRAW')
       })
     })
   })
