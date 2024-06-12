@@ -1,8 +1,7 @@
-import { describe, expect, it } from 'vitest'
+import { createMovePlayerCommand } from '@/connect-4-domain/commands'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect-4-domain/game'
+import { describe, expect, it } from 'vitest'
 import _toAsciiTable from './to-ascii-table'
-import { MovePlayerCommand, createMovePlayerCommand } from '@/connect-4-domain/commands'
-import { EventTypes } from './events'
 
 function toAsciiTable(board: Array<Array<BoardCell>>): string {
   const cellResolver = (cell: BoardCell) => (cell.player === undefined ? ` ` : `${cell.player}`)
@@ -61,10 +60,68 @@ describe('game', () => {
         const secondBoard = game.getBoard()
         expect(secondBoard).toBeDeeplyUnequal(firstBoard)
       })
-      it.todo(
-        'changes made to the game after a getBoard do not affect copies of the board',
-        () => {},
-      )
+      it('changes made to the game after a getBoard do not affect copies of the board', () => {
+        const game = new GameFactory()
+        const originalBoard = game.getBoard()
+        expect(toAsciiTable(originalBoard)).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|"
+        `)
+        const movePlayerCommand = createMovePlayerCommand({
+          player: 1,
+          targetCell: {
+            row: 0,
+            column: 0,
+          },
+        })
+        game.move(movePlayerCommand)
+        const boardAfterMove = game.getBoard()
+        expect(toAsciiTable(originalBoard)).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|"
+        `)
+        expect(toAsciiTable(boardAfterMove)).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|---|---|---|
+          | 1 |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|"
+        `)
+        expect(boardAfterMove).toBeDeeplyUnequal(originalBoard)
+      })
     })
     describe('given custom board dimensions', () => {
       describe('with 0 rows', () => {
