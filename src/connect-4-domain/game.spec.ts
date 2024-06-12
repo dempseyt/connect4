@@ -550,5 +550,44 @@ describe('game', () => {
         expect(gameStatus).toEqual('PLAYER_ONE_WIN')
       })
     })
+    describe('and player two has won', () => {
+      it('reports the status as player two win', () => {
+        const game = new GameFactory({
+          boardDimensions: {
+            rows: 1,
+            columns: 10,
+          },
+        })
+        const payloads = [
+          { player: 1, targetCell: { row: 0, column: 0 } },
+          { player: 2, targetCell: { row: 0, column: 9 } },
+          { player: 1, targetCell: { row: 0, column: 1 } },
+          { player: 2, targetCell: { row: 0, column: 8 } },
+          { player: 1, targetCell: { row: 0, column: 2 } },
+          { player: 2, targetCell: { row: 0, column: 7 } },
+          { player: 1, targetCell: { row: 0, column: 4 } },
+          { player: 2, targetCell: { row: 0, column: 6 } },
+        ] satisfies MovePlayerCommandPayload[]
+
+        payloads.forEach(
+          R.pipe<
+            [MovePlayerCommandPayload],
+            MovePlayerCommand,
+            PlayerMovedEvent | PlayerMoveFailedEvent
+          >(createMovePlayerCommand, (playerMoveCommand: MovePlayerCommand) =>
+            game.move(playerMoveCommand),
+          ),
+        )
+        expect(R.pipe<[], Board, string>(() => game.getBoard(), toAsciiTable)())
+          .toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|---|---|---|---|---|---|
+          | 1 | 1 | 1 |   | 1 |   | 2 | 2 | 2 | 2 |
+          |---|---|---|---|---|---|---|---|---|---|"
+        `)
+        const gameStatus = game.getStatus()
+        expect(gameStatus).toEqual('PLAYER_TWO_WIN')
+      })
+    })
   })
 })
