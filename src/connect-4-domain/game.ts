@@ -6,6 +6,7 @@ import {
   createPlayerMoveFailedEvent,
   createPlayerMovedEvent,
 } from './events'
+import getIsWinningMove from './get-is-winning-move'
 
 export type BoardCell = {
   player: 1 | 2 | undefined
@@ -13,6 +14,8 @@ export type BoardCell = {
 
 enum Status {
   IN_PROGRESS = 'IN_PROGRESS',
+  PLAYER_ONE_WIN = 'PLAYER_ONE_WIN',
+  PLAYER_TWO_WIN = 'PLAYER_TWO_WIN',
 }
 
 type GameParameters = {
@@ -166,9 +169,12 @@ class GameFactory implements Game {
       targetCell: { row, column },
     },
   }: MovePlayerCommand): PlayerMovedEvent {
+    const isWinningMove = getIsWinningMove(this.getBoard(), { player, targetCell: { row, column } })
+    if (isWinningMove) {
+      this.status = this.activePlayer === player ? Status.PLAYER_ONE_WIN : Status.PLAYER_TWO_WIN
+    }
     this.board[row][column] = { player }
     this.activePlayer = this.activePlayer === 1 ? 2 : 1
-
     return createPlayerMovedEvent({ player, targetCell: { row, column } })
   }
 
