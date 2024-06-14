@@ -130,6 +130,11 @@ class GameFactory implements Game {
         },
       } = movePlayerCommand
 
+      if (this.status !== Status.IN_PROGRESS) {
+        const message = `The game is no longer in progress.`
+        return createPlayerMoveFailedEvent({ message: message })
+      }
+
       if (this.getActivePlayer() !== player) {
         const message = `Player ${player} cannot move as player ${this.getActivePlayer() === 1 ? 1 : 2} is currently active.`
         return createPlayerMoveFailedEvent({ message: message })
@@ -171,9 +176,11 @@ class GameFactory implements Game {
     },
   }: MovePlayerCommand): PlayerMovedEvent {
     this.players[this.activePlayer].remainingDisks -= 1
+
     const playerOneRemainingDisks = this.getPlayerStats(1).remainingDisks
     const playerTwoRemainingDisks = this.getPlayerStats(2).remainingDisks
     const isWinningMove = getIsWinningMove(this.getBoard(), { player, targetCell: { row, column } })
+
     if (isWinningMove.isWin) {
       this.status = player === 1 ? Status.PLAYER_ONE_WIN : Status.PLAYER_TWO_WIN
     } else if (playerOneRemainingDisks === 0 && playerTwoRemainingDisks === 0) {
