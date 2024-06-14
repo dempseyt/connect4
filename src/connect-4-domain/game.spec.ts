@@ -562,7 +562,50 @@ describe('game', () => {
         })
       })
       describe('as the result was a draw', () => {
-        it.todo('returns a move failed event', () => {})
+        it('returns a move failed event', () => {
+          const game = new GameFactory({
+            boardDimensions: {
+              rows: 1,
+              columns: 4,
+            },
+          })
+          const payloads = [
+            { player: 1, targetCell: { row: 0, column: 0 } },
+            { player: 2, targetCell: { row: 0, column: 1 } },
+            { player: 1, targetCell: { row: 0, column: 2 } },
+            { player: 2, targetCell: { row: 0, column: 3 } },
+          ] satisfies MovePlayerCommandPayload[]
+
+          payloads.forEach(
+            R.pipe<
+              [MovePlayerCommandPayload],
+              MovePlayerCommand,
+              PlayerMovedEvent | PlayerMoveFailedEvent
+            >(createMovePlayerCommand, (playerMoveCommand: MovePlayerCommand) =>
+              game.move(playerMoveCommand),
+            ),
+          )
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+            "
+            |---|---|---|---|
+            | 1 | 2 | 1 | 2 |
+            |---|---|---|---|"
+          `)
+          const movePlayerCommand = createMovePlayerCommand({
+            player: 2,
+            targetCell: {
+              row: 0,
+              column: 3,
+            },
+          })
+          const event = game.move(movePlayerCommand)
+          expect(event).toEqual({
+            type: 'PLAYER_MOVE_FAILED',
+            payload: {
+              message: 'The game is no longer in progress.',
+            },
+          })
+        })
       })
     })
   })
