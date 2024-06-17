@@ -5,7 +5,7 @@ import {
 } from '@/connect-4-domain/commands'
 import GameFactory, { Board, BoardCell, InvalidBoardDimensionsError } from '@/connect-4-domain/game'
 import * as R from 'ramda'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from './events'
 import _toAsciiTable from './to-ascii-table'
 
@@ -127,6 +127,18 @@ describe('game', () => {
           |   |   |   |   |   |   |   |
           |---|---|---|---|---|---|---|"
         `)
+      })
+    })
+    describe('persisting a game', () => {
+      describe('given an in custom repository', () => {
+        it.todo('saves the game', () => {
+          const repository = new InMemoryRepository()
+          const game = new GameFactory({ repository })
+          const repositorySpy = vi.spyOn(repository, 'saveGame')
+          expect(toAsciiTable(game.getBoard())).toEqual(toAsciiTable(repositorySpy.lastCall[0]))
+          expect(repositorySpy).toHaveBeenCalledWith(game.getBoard())
+          expect(toAsciiTable(repository.loadGame())).toEqual(toAsciiTable(game.getBoard()))
+        })
       })
     })
     describe('given custom board dimensions', () => {
