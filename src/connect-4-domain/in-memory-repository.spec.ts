@@ -1,4 +1,4 @@
-import InMemoryRepository from '@/connect-4-domain/in-memory-repository'
+import InMemoryRepository, { BoardUuid } from '@/connect-4-domain/in-memory-repository'
 import { describe, expect, it } from 'vitest'
 import { Board, BoardCell } from './game'
 import parseAsciiTable from './parse-ascii-table'
@@ -20,6 +20,18 @@ describe('in-memory-repository', () => {
     it('creates an in-memory repository', () => {
       const repository = new InMemoryRepository()
       expect(repository).toBeInstanceOf(InMemoryRepository)
+    })
+    it('loads a previously saved board', () => {
+      const repository = new InMemoryRepository()
+      const asciiTable = `
+      |---|---|---|---|
+      |   |   |   |   |
+      |---|---|---|---|
+      |   |   |   |   |
+      |---|---|---|---|`
+      const board: Board = parseAsciiTable(asciiTable, customResolver)
+      const boardId: BoardUuid = repository.save(board)
+      expect(repository.load(boardId)).toBe(board)
     })
   })
   describe('given a store', () => {

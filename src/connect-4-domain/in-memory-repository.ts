@@ -1,6 +1,6 @@
 import { Board } from './game'
 
-type BoardUuid = `${string}-${string}-${string}-${string}-${string}`
+export type BoardUuid = `${string}-${string}-${string}-${string}-${string}`
 
 type Store = Map<BoardUuid, Board>
 
