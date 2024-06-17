@@ -53,5 +53,18 @@ describe('in-memory-repository', () => {
       const boardId = repository.save(board)
       expect(store.get(boardId)).toBe(board)
     })
+    it('loads a board', () => {
+      const store = new Map()
+      const repository = new InMemoryRepository(store)
+      const asciiTable = `
+      |---|---|---|---|
+      |   |   |   |   |
+      |---|---|---|---|
+      |   |   |   |   |
+      |---|---|---|---|`
+      const board: Board = parseAsciiTable(asciiTable, customResolver)
+      const boardId: BoardUuid = repository.save(board)
+      expect(repository.load(boardId)).toBe(board)
+    })
   })
 })
