@@ -7,6 +7,7 @@ import GameFactory, { Board, BoardCell, InvalidBoardDimensionsError } from '@/co
 import * as R from 'ramda'
 import { describe, expect, it, vi } from 'vitest'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from './events'
+import InMemoryRepository from './in-memory-repository'
 import _toAsciiTable from './to-ascii-table'
 
 function toAsciiTable(board: Array<Array<BoardCell>>): string {
@@ -131,13 +132,13 @@ describe('game', () => {
     })
     describe('persisting a game', () => {
       describe('given an in custom repository', () => {
-        it.todo('saves the game', () => {
+        it('saves the game', () => {
           const repository = new InMemoryRepository()
           const game = new GameFactory({ repository })
-          const repositorySpy = vi.spyOn(repository, 'saveGame')
+          const repositorySpy = vi.spyOn(repository, 'save')
           expect(toAsciiTable(game.getBoard())).toEqual(toAsciiTable(repositorySpy.lastCall[0]))
           expect(repositorySpy).toHaveBeenCalledWith(game.getBoard())
-          expect(toAsciiTable(repository.loadGame())).toEqual(toAsciiTable(game.getBoard()))
+          expect(toAsciiTable(repository.load())).toEqual(toAsciiTable(game.getBoard()))
         })
       })
     })

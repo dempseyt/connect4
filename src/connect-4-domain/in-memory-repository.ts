@@ -1,13 +1,8 @@
-import { Board } from './game'
+import { Board, GameRepository } from './game'
 
 export type BoardUuid = `${string}-${string}-${string}-${string}-${string}`
 
 type Store = Map<BoardUuid, Board>
-
-interface GameRepository {
-  save: (board: Board) => BoardUuid
-  load: (boardId: BoardUuid) => Board | undefined
-}
 
 class InMemoryRepository implements GameRepository {
   private store: Store
