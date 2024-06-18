@@ -25,8 +25,9 @@ enum Status {
   DRAW = 'DRAW',
 }
 
-type GameParameters = {
-  boardDimensions: BoardDimensions
+export type GameParameters = {
+  boardDimensions?: BoardDimensions
+  repository?: GameRepository
 }
 
 export type PlayerMove = {
@@ -66,13 +67,23 @@ class GameFactory implements Game {
   private players: Record<PlayerNumber, PlayerStats>
   private activePlayer: PlayerNumber
   private status: Status
+  private repository: GameRepository | undefined
 
-  constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
+  constructor(
+    { boardDimensions = { rows: 6, columns: 7 }, repository }: GameParameters = {
+      boardDimensions: {
+        rows: 6,
+        columns: 7,
+      },
+    },
+  ) {
     this.#validateBoardDimensions(boardDimensions)
     this.board = this.#createBoard(boardDimensions)
     this.players = this.#createPlayers(boardDimensions)
     this.activePlayer = 1
     this.status = Status.IN_PROGRESS
+    this.repository = repository
+    this.repository?.save(this.board)
   }
 
   #validateBoardDimensions(boardDimensions: BoardDimensions) {
