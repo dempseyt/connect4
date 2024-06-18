@@ -1,6 +1,6 @@
-import InMemoryRepository, { BoardUuid } from '@/connect-4-domain/in-memory-repository'
+import InMemoryRepository, { GameUuid } from '@/connect-4-domain/in-memory-repository'
 import { describe, expect, it } from 'vitest'
-import { Board, BoardCell } from './game'
+import { Board, BoardCell, PersistentGame, Status } from './game'
 import parseAsciiTable from './parse-ascii-table'
 
 const customResolver = (value: string): BoardCell => {
@@ -21,17 +21,27 @@ describe('in-memory-repository', () => {
       const repository = new InMemoryRepository()
       expect(repository).toBeInstanceOf(InMemoryRepository)
     })
-    it('loads a previously saved board', () => {
+    it('loads a previously saved game', () => {
       const repository = new InMemoryRepository()
       const asciiTable = `
-      |---|---|---|---|
-      |   |   |   |   |
-      |---|---|---|---|
-      |   |   |   |   |
-      |---|---|---|---|`
+|---|---|---|---|
+|   |   |   |   |
+|---|---|---|---|
+|   |   |   |   |
+|---|---|---|---|`
       const board: Board = parseAsciiTable(asciiTable, customResolver)
-      const boardId: BoardUuid = repository.save(board)
-      expect(repository.load(boardId)).toBe(board)
+      const persistentGame: PersistentGame = {
+        board,
+        activePlayer: 1,
+        players: {
+          1: { playerNumber: 1, remainingDisks: 4 },
+          2: { playerNumber: 2, remainingDisks: 4 },
+        },
+        status: 'IN_PROGRESS' as Status,
+      }
+      const gameId: GameUuid = repository.save2(persistentGame)
+
+      expect(repository.load(gameId)).toMatchObject(persistentGame)
     })
     it('returns undefined when loading a non-existent board', () => {
       const repository = new InMemoryRepository()
@@ -63,7 +73,7 @@ describe('in-memory-repository', () => {
 |   |   |   |   |
 |---|---|---|---|`
       const board: Board = parseAsciiTable(asciiTable, customResolver)
-      const boardId: BoardUuid = crypto.randomUUID()
+      const boardId: GameUuid = crypto.randomUUID()
       const retrievedBoardId = repository.save(board, boardId)
       expect(retrievedBoardId).toEqual(boardId)
       expect(store.get(boardId)).toBe(board)
@@ -78,7 +88,7 @@ describe('in-memory-repository', () => {
       |   |   |   |   |
       |---|---|---|---|`
       const board: Board = parseAsciiTable(asciiTable, customResolver)
-      const boardId: BoardUuid = repository.save(board)
+      const boardId: GameUuid = repository.save(board)
       expect(repository.load(boardId)).toBe(board)
     })
     it('returns undefined when loading a non-existent board', () => {

@@ -7,15 +7,15 @@ import {
   createPlayerMovedEvent,
 } from './events'
 import getIsWinningMove from './get-is-winning-move'
-import { BoardUuid } from './in-memory-repository'
+import { GameUuid } from './in-memory-repository'
 
 export type BoardCell = {
   player: 1 | 2 | undefined
 }
 
 export interface GameRepository {
-  save: (board: Board, boardId: BoardUuid) => BoardUuid
-  load: (boardId: BoardUuid) => Board | undefined
+  save: (board: Board, boardId: GameUuid) => GameUuid
+  load: (boardId: GameUuid) => Board | undefined
 }
 
 enum Status {

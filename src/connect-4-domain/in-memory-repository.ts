@@ -1,22 +1,22 @@
 import { Board, GameRepository } from './game'
 
-export type BoardUuid = `${string}-${string}-${string}-${string}-${string}`
+export type GameUuid = `${string}-${string}-${string}-${string}-${string}`
 
-type Store = Map<BoardUuid, Board>
+type Store = Map<GameUuid, Board>
 
 class InMemoryRepository implements GameRepository {
   private store: Store
 
-  constructor(store: Store = new Map<BoardUuid, Board>()) {
+  constructor(store: Store = new Map<GameUuid, Board>()) {
     this.store = store
   }
 
-  save(board: Board, boardUuid: BoardUuid = crypto.randomUUID()): BoardUuid {
+  save(board: Board, boardUuid: GameUuid = crypto.randomUUID()): GameUuid {
     this.store.set(boardUuid, board)
     return boardUuid
   }
 
-  load(boardId: BoardUuid): Board | undefined {
+  load(boardId: GameUuid): Board | undefined {
     return this.store.get(boardId)
   }
 }

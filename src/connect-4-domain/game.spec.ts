@@ -146,6 +146,7 @@ describe('game', () => {
           //@ts-ignore
           expect(toAsciiTable(repository.load(boardId))).toEqual(toAsciiTable(game.getBoard()))
         })
+        it.todo('loads a game', () => {})
       })
     })
     describe('given custom board dimensions', () => {
