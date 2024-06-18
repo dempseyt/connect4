@@ -137,14 +137,23 @@ describe('game', () => {
           const repository = new InMemoryRepository()
           const repositorySpy = vi.spyOn(repository, 'save')
           const game = new GameFactory({ repository })
-          expect(toAsciiTable(game.getBoard())).toEqual(
-            toAsciiTable(repositorySpy.mock.calls[0][0]),
-          )
-          expect(repositorySpy).toHaveBeenCalledWith(game.getBoard())
-          const boardId = repositorySpy.mock.results[0].value
-          expect(repository.load(boardId)).not.toBe(undefined)
-          //@ts-ignore
-          expect(toAsciiTable(repository.load(boardId))).toEqual(toAsciiTable(game.getBoard()))
+          const { board, activePlayer, players, status } = repositorySpy.mock.calls[0][0]
+          expect(toAsciiTable(game.getBoard())).toEqual(toAsciiTable(board))
+          expect(activePlayer).toBe(1)
+          expect(players).toMatchObject({
+            1: { playerNumber: 1, remainingDisks: 4 },
+            2: { playerNumber: 2, remainingDisks: 4 },
+          })
+          expect(status).toBe('IN_PROGRESS')
+          const gameId = repositorySpy.mock.results[0].value
+          const retrievedPersistedGame = repository.load(gameId)
+          expect(retrievedPersistedGame).not.toBe(undefined)
+          expect(retrievedPersistedGame).toMatchObject({
+            board,
+            activePlayer,
+            players,
+            status,
+          })
         })
         it.todo('loads a game', () => {})
       })
