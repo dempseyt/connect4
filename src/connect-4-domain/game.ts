@@ -15,7 +15,7 @@ export type BoardCell = {
 
 export interface GameRepository {
   save: (persistentGame: PersistentGame, gameUuid?: GameUuid) => GameUuid
-  load: (boardId: GameUuid) => Board | undefined | PersistentGame
+  load: (boardId: GameUuid) => undefined | PersistentGame
 }
 
 export enum Status {
@@ -67,6 +67,7 @@ interface Game {
   getStatus: () => Status
   getActivePlayer: () => PlayerNumber
   move: (movePlayerCommand: MovePlayerCommand) => PlayerMoveFailedEvent | PlayerMovedEvent
+  load: (gameId: GameUuid) => void
 }
 
 class GameFactory implements Game {
@@ -237,6 +238,19 @@ class GameFactory implements Game {
 
   getActivePlayer(): PlayerNumber {
     return this.activePlayer
+  }
+
+  load(gameId: GameUuid) {
+    const gameStateToLoad = this.repository?.load(gameId)
+    if (gameStateToLoad !== undefined) {
+      const { board, activePlayer, players, status } = gameStateToLoad
+      this.board = board
+      this.activePlayer = activePlayer
+      this.players = players
+      this.status = status
+    } else {
+      throw new Error('The provided game UUID is invalid.')
+    }
   }
 }
 
