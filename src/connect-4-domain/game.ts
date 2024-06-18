@@ -90,7 +90,13 @@ class GameFactory implements Game {
     this.activePlayer = 1
     this.status = Status.IN_PROGRESS
     this.repository = repository
-    this.repository?.save(this.board)
+
+    this.repository?.save({
+      board: this.getBoard(),
+      activePlayer: this.activePlayer,
+      players: this.players,
+      status: this.status,
+    })
   }
 
   #validateBoardDimensions(boardDimensions: BoardDimensions) {

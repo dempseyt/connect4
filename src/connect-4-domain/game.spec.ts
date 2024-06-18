@@ -141,8 +141,8 @@ describe('game', () => {
           expect(toAsciiTable(game.getBoard())).toEqual(toAsciiTable(board))
           expect(activePlayer).toBe(1)
           expect(players).toMatchObject({
-            1: { playerNumber: 1, remainingDisks: 4 },
-            2: { playerNumber: 2, remainingDisks: 4 },
+            1: { playerNumber: 1, remainingDisks: 21 },
+            2: { playerNumber: 2, remainingDisks: 21 },
           })
           expect(status).toBe('IN_PROGRESS')
           const gameId = repositorySpy.mock.results[0].value
@@ -155,7 +155,39 @@ describe('game', () => {
             status,
           })
         })
-        it.todo('loads a game', () => {})
+        it('loads a game', () => {
+          const repository = new InMemoryRepository()
+          const repositorySpy = vi.spyOn(repository, 'save')
+          const game = new GameFactory({ repository })
+          const gameId = repositorySpy.mock.results[0].value
+          game.load(gameId)
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+            "
+            |---|---|---|---|---|---|---|
+            |   |   |   |   |   |   |   |
+            |---|---|---|---|---|---|---|
+            |   |   |   |   |   |   |   |
+            |---|---|---|---|---|---|---|
+            |   |   |   |   |   |   |   |
+            |---|---|---|---|---|---|---|
+            |   |   |   |   |   |   |   |
+            |---|---|---|---|---|---|---|
+            |   |   |   |   |   |   |   |
+            |---|---|---|---|---|---|---|
+            |   |   |   |   |   |   |   |
+            |---|---|---|---|---|---|---|"
+          `)
+          expect(game.getActivePlayer()).toBe(1)
+          expect(game.getPlayerStats(1)).toMatchObject({
+            playerNumber: 1,
+            remainingDisks: 21,
+          })
+          expect(game.getPlayerStats(2)).toMatchObject({
+            playerNumber: 2,
+            remainingDisks: 21,
+          })
+          expect(game.getStatus()).toEqual('IN_PROGRESS')
+        })
       })
     })
     describe('given custom board dimensions', () => {
