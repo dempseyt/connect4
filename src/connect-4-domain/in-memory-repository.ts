@@ -11,12 +11,7 @@ class InMemoryRepository implements GameRepository {
     this.store = store
   }
 
-  save(board: Board, boardUuid: GameUuid = crypto.randomUUID()): GameUuid {
-    this.store.set(boardUuid, board)
-    return boardUuid
-  }
-
-  save2(persistentGame: PersistentGame, gameUuid: GameUuid = crypto.randomUUID()): GameUuid {
+  save(persistentGame: PersistentGame, gameUuid: GameUuid = crypto.randomUUID()): GameUuid {
     this.store.set(gameUuid, persistentGame)
     return gameUuid
   }
