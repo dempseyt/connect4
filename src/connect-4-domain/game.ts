@@ -14,15 +14,22 @@ export type BoardCell = {
 }
 
 export interface GameRepository {
-  save: (board: Board, boardId: GameUuid) => GameUuid
-  load: (boardId: GameUuid) => Board | undefined
+  save: (board: Board, boardId?: GameUuid) => GameUuid
+  load: (boardId: GameUuid) => Board | undefined | PersistentGame
 }
 
-enum Status {
+export enum Status {
   IN_PROGRESS = 'IN_PROGRESS',
   PLAYER_ONE_WIN = 'PLAYER_ONE_WIN',
   PLAYER_TWO_WIN = 'PLAYER_TWO_WIN',
   DRAW = 'DRAW',
+}
+
+export type PersistentGame = {
+  board: Board
+  activePlayer: PlayerNumber
+  players: Record<PlayerNumber, PlayerStats>
+  status: Status
 }
 
 export type GameParameters = {

@@ -1,8 +1,8 @@
-import { Board, GameRepository } from './game'
+import { Board, GameRepository, PersistentGame } from './game'
 
 export type GameUuid = `${string}-${string}-${string}-${string}-${string}`
 
-type Store = Map<GameUuid, Board>
+type Store = Map<GameUuid, Board | PersistentGame>
 
 class InMemoryRepository implements GameRepository {
   private store: Store
@@ -16,7 +16,12 @@ class InMemoryRepository implements GameRepository {
     return boardUuid
   }
 
-  load(boardId: GameUuid): Board | undefined {
+  save2(persistentGame: PersistentGame, gameUuid: GameUuid = crypto.randomUUID()): GameUuid {
+    this.store.set(gameUuid, persistentGame)
+    return gameUuid
+  }
+
+  load(boardId: GameUuid): Board | PersistentGame | undefined {
     return this.store.get(boardId)
   }
 }
