@@ -188,6 +188,16 @@ describe('game', () => {
           })
           expect(game.getStatus()).toEqual('IN_PROGRESS')
         })
+        describe('and an invalid game UUID', () => {
+          it('throws an error', () => {
+            const repository = new InMemoryRepository()
+            const game = new GameFactory({ repository })
+            const invalidGameId = crypto.randomUUID()
+            expect(() => {
+              game.load(invalidGameId)
+            }).toThrow('The provided game UUID is invalid.')
+          })
+        })
       })
     })
     describe('given custom board dimensions', () => {
