@@ -14,7 +14,7 @@ export type BoardCell = {
 }
 
 export interface GameRepository {
-  save: (board: Board) => BoardUuid
+  save: (board: Board, boardId: BoardUuid) => BoardUuid
   load: (boardId: BoardUuid) => Board | undefined
 }
 
