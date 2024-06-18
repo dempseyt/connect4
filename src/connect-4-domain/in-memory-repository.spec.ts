@@ -71,18 +71,12 @@ describe('in-memory-repository', () => {
       expect(retrievedBoardId).toEqual(gameId)
       expect(store.get(gameId)).toMatchObject(persistentGame)
     })
-    it('loads a board', () => {
+    it('loads a game', () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
-      const asciiTable = `
-      |---|---|---|---|
-      |   |   |   |   |
-      |---|---|---|---|
-      |   |   |   |   |
-      |---|---|---|---|`
-      const board: Board = parseAsciiTable(asciiTable, customResolver)
-      const boardId: GameUuid = repository.save(board)
-      expect(repository.load(boardId)).toBe(board)
+      const persistentGame = createPersistentGame()
+      const gameId: GameUuid = repository.save2(persistentGame)
+      expect(repository.load(gameId)).toMatchObject(persistentGame)
     })
     it('returns undefined when loading a non-existent board', () => {
       const store = new Map()
