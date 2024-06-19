@@ -784,4 +784,39 @@ describe('game', () => {
       })
     })
   })
+  describe('persisting a game', () => {
+    describe('given defaults', () => {
+      it('saves and loads a game', () => {
+        const game = new GameFactory()
+        const gameId = game.save()
+        game.load(gameId)
+        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|"
+        `)
+        expect(game.getActivePlayer()).toBe(1)
+        expect(game.getPlayerStats(1)).toMatchObject({
+          playerNumber: 1,
+          remainingDisks: 21,
+        })
+        expect(game.getPlayerStats(2)).toMatchObject({
+          playerNumber: 2,
+          remainingDisks: 21,
+        })
+        expect(game.getStatus()).toEqual('IN_PROGRESS')
+      })
+    })
+  })
 })
