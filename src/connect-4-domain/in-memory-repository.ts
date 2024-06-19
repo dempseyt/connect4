@@ -1,6 +1,4 @@
-import { GameRepository, PersistentGame } from './game'
-
-export type GameUuid = `${string}-${string}-${string}-${string}-${string}`
+import { GameRepository, GameUuid, PersistentGame } from './game-types'
 
 type Store = Map<GameUuid, PersistentGame>
 

@@ -3,10 +3,11 @@ import {
   MovePlayerCommandPayload,
   createMovePlayerCommand,
 } from '@/connect-4-domain/commands'
-import GameFactory, { Board, BoardCell, InvalidBoardDimensionsError } from '@/connect-4-domain/game'
+import GameFactory, { InvalidBoardDimensionsError } from '@/connect-4-domain/game'
 import * as R from 'ramda'
 import { describe, expect, it } from 'vitest'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from './events'
+import { Board, BoardCell } from './game-types'
 import InMemoryRepository from './in-memory-repository'
 import _toAsciiTable from './to-ascii-table'
 

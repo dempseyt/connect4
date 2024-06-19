@@ -1,6 +1,6 @@
-import InMemoryRepository, { GameUuid } from '@/connect-4-domain/in-memory-repository'
+import InMemoryRepository from '@/connect-4-domain/in-memory-repository'
 import { describe, expect, it } from 'vitest'
-import { Board, BoardCell, PersistentGame, Status } from './game'
+import { Board, BoardCell, GameUuid, PersistentGame, Status } from './game-types'
 import parseAsciiTable from './parse-ascii-table'
 
 const customResolver = (value: string): BoardCell => {
