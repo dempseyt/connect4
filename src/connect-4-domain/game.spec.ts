@@ -5,7 +5,7 @@ import {
 } from '@/connect-4-domain/commands'
 import GameFactory, { Board, BoardCell, InvalidBoardDimensionsError } from '@/connect-4-domain/game'
 import * as R from 'ramda'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from './events'
 import InMemoryRepository from './in-memory-repository'
 import _toAsciiTable from './to-ascii-table'
@@ -155,36 +155,25 @@ describe('game', () => {
         })
         it('loads a game', () => {
           const repository = new InMemoryRepository()
-          const repositorySpy = vi.spyOn(repository, 'save')
           const game = new GameFactory({ repository })
-          const gameId = repositorySpy.mock.results[0].value
+          const board = game.getBoard()
+          const activePlayer = game.getActivePlayer()
+          const playerStats = {
+            1: game.getPlayerStats(1),
+            2: game.getPlayerStats(2),
+          }
+          const status = game.getStatus()
+
+          const gameId = game.save()
           game.load(gameId)
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
-            "
-            |---|---|---|---|---|---|---|
-            |   |   |   |   |   |   |   |
-            |---|---|---|---|---|---|---|
-            |   |   |   |   |   |   |   |
-            |---|---|---|---|---|---|---|
-            |   |   |   |   |   |   |   |
-            |---|---|---|---|---|---|---|
-            |   |   |   |   |   |   |   |
-            |---|---|---|---|---|---|---|
-            |   |   |   |   |   |   |   |
-            |---|---|---|---|---|---|---|
-            |   |   |   |   |   |   |   |
-            |---|---|---|---|---|---|---|"
-          `)
-          expect(game.getActivePlayer()).toBe(1)
-          expect(game.getPlayerStats(1)).toMatchObject({
-            playerNumber: 1,
-            remainingDisks: 21,
-          })
-          expect(game.getPlayerStats(2)).toMatchObject({
-            playerNumber: 2,
-            remainingDisks: 21,
-          })
-          expect(game.getStatus()).toEqual('IN_PROGRESS')
+
+          expect(game.getBoard()).toEqual(board)
+          expect(game.getActivePlayer()).toBe(activePlayer)
+          expect({
+            1: game.getPlayerStats(1),
+            2: game.getPlayerStats(2),
+          }).toMatchObject(playerStats)
+          expect(game.getStatus()).toEqual(status)
         })
         describe('and an invalid game UUID', () => {
           it('throws an error', () => {
