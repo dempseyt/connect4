@@ -18,6 +18,7 @@ import {
   Status,
 } from './game-types'
 import getIsWinningMove from './get-is-winning-move'
+import InMemoryRepository from './in-memory-repository'
 
 export class InvalidBoardDimensionsError extends RangeError {}
 
@@ -36,14 +37,18 @@ class GameFactory implements Game {
   private players: Record<PlayerNumber, PlayerStats>
   private activePlayer: PlayerNumber
   private status: Status
-  private repository: GameRepository | undefined
+  private repository: GameRepository
 
   constructor(
-    { boardDimensions = { rows: 6, columns: 7 }, repository }: GameParameters = {
+    {
+      boardDimensions = { rows: 6, columns: 7 },
+      repository = new InMemoryRepository(),
+    }: GameParameters = {
       boardDimensions: {
         rows: 6,
         columns: 7,
       },
+      repository: new InMemoryRepository(),
     },
   ) {
     this.#validateBoardDimensions(boardDimensions)
