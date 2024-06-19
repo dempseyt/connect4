@@ -15,7 +15,7 @@ export type BoardCell = {
 
 export interface GameRepository {
   save: (persistentGame: PersistentGame, gameUuid?: GameUuid) => GameUuid
-  load: (boardId: GameUuid) => undefined | PersistentGame
+  load: (gameId: GameUuid) => undefined | PersistentGame
 }
 
 export enum Status {
@@ -67,6 +67,7 @@ interface Game {
   getStatus: () => Status
   getActivePlayer: () => PlayerNumber
   move: (movePlayerCommand: MovePlayerCommand) => PlayerMoveFailedEvent | PlayerMovedEvent
+  save: () => GameUuid
   load: (gameId: GameUuid) => void
 }
 
@@ -91,13 +92,6 @@ class GameFactory implements Game {
     this.activePlayer = 1
     this.status = Status.IN_PROGRESS
     this.repository = repository
-
-    this.repository?.save({
-      board: this.getBoard(),
-      activePlayer: this.activePlayer,
-      players: this.players,
-      status: this.status,
-    })
   }
 
   #validateBoardDimensions(boardDimensions: BoardDimensions) {
@@ -238,6 +232,22 @@ class GameFactory implements Game {
 
   getActivePlayer(): PlayerNumber {
     return this.activePlayer
+  }
+
+  save(): GameUuid {
+    const gameUuid = crypto.randomUUID()
+    if (this.repository !== undefined) {
+      this.repository?.save(
+        {
+          board: this.getBoard(),
+          activePlayer: this.activePlayer,
+          players: this.players,
+          status: this.status,
+        },
+        gameUuid,
+      )
+    }
+    return gameUuid
   }
 
   load(gameId: GameUuid) {
