@@ -135,20 +135,18 @@ describe('game', () => {
       describe('given a custom repository', () => {
         it('saves the game', () => {
           const repository = new InMemoryRepository()
-          const repositorySpy = vi.spyOn(repository, 'save')
           const game = new GameFactory({ repository })
-          const { board, activePlayer, players, status } = repositorySpy.mock.calls[0][0]
-          expect(toAsciiTable(game.getBoard())).toEqual(toAsciiTable(board))
-          expect(activePlayer).toBe(1)
-          expect(players).toMatchObject({
-            1: { playerNumber: 1, remainingDisks: 21 },
-            2: { playerNumber: 2, remainingDisks: 21 },
-          })
-          expect(status).toBe('IN_PROGRESS')
-          const gameId = repositorySpy.mock.results[0].value
-          const retrievedPersistedGame = repository.load(gameId)
-          expect(retrievedPersistedGame).not.toBe(undefined)
-          expect(retrievedPersistedGame).toMatchObject({
+
+          const board = game.getBoard()
+          const activePlayer = game.getActivePlayer()
+          const players = {
+            1: game.getPlayerStats(1),
+            2: game.getPlayerStats(2),
+          }
+          const status = game.getStatus()
+          const gameId = game.save()
+          const persistentGame = repository.load(gameId)
+          expect(persistentGame).toMatchObject({
             board,
             activePlayer,
             players,
