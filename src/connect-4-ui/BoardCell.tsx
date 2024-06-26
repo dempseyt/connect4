@@ -4,6 +4,7 @@ export type BoardCellProps = {
   player?: 1 | 2
   id?: string
   className?: string
+  onClick?: () => void
 }
 
 const StyledBoardCell = styled.div`
@@ -49,9 +50,14 @@ const StyledBoardCellDisc = styled.div<{ player?: 1 | 2 }>`
   }};
 `
 
-export const BoardCell = ({ player, className, id = crypto.randomUUID() }: BoardCellProps) => {
+export const BoardCell = ({
+  player,
+  className,
+  id = crypto.randomUUID(),
+  onClick,
+}: BoardCellProps) => {
   return (
-    <StyledBoardCell className={className} id={id}>
+    <StyledBoardCell className={className} id={id} onClick={onClick}>
       <AspectRatioBox>
         <ContentWrapper>
           <StyledBoardCellDisc player={player} />

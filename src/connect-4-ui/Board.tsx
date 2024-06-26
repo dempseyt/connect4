@@ -2,8 +2,11 @@ import { BoardCell, BoardCellProps } from '@/connect-4-ui/BoardCell'
 import createCells from '@/connect-4-ui/create-cells'
 import styled from 'styled-components'
 
+type ClickHandler = (row: number, column: number) => void
+
 export type BoardProps = {
   cells: Array<Array<BoardCellProps>>
+  onClick: ClickHandler
 }
 
 type GridCellProps = {
@@ -23,13 +26,22 @@ const GridElement = styled(BoardCell)<GridCellProps>`
   grid-row-start: ${(props) => props.rowIndex};
   grid-column-start: ${(props) => props.columnIndex};
 `
+function createHandleBoardCellClick(
+  { rowIndex, columnIndex }: GridCellProps,
+  onClick: ClickHandler,
+) {
+  return function handleBoardCellClick() {
+    onClick(rowIndex, columnIndex)
+  }
+}
 
-export const Board = ({ cells = createCells(6, 7) }: BoardProps) => {
+export const Board = ({ cells = createCells(6, 7), onClick = () => {} }: BoardProps) => {
   return (
-    <StyledBoard cells={cells}>
+    <StyledBoard cells={cells} onClick={onClick}>
       {cells.flatMap((row, rowIndex) =>
         row.map((cell, columnIndex) => (
           <GridElement
+            onClick={createHandleBoardCellClick({ rowIndex, columnIndex }, onClick)}
             key={cell.id}
             rowIndex={rowIndex + 1}
             columnIndex={columnIndex + 1}
