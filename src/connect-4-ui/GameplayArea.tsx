@@ -7,13 +7,14 @@ export type GameplayAreaProps = {
     gameOverview: GameOverviewProps
     board: BoardProps
   }
+  onStartGameClick?: () => void
 }
 
-const StyledGameplayArea = styled.div<GameplayAreaProps>`
+const StyledGameplayArea = styled.div<{ $activeGame: GameplayAreaProps['activeGame'] }>`
   display: flex;
   flex-wrap: wrap;
-  background-color: aquamarine;
-  justify-content: ${({ activeGame }) => (activeGame === undefined ? 'center' : 'space-around')};
+  background-color: #24deff;
+  justify-content: ${({ $activeGame }) => ($activeGame === undefined ? 'center' : 'space-around')};
   align-items: center;
   height: 100vh;
 `
@@ -26,16 +27,16 @@ const StyledButton = styled.button`
   color: blue;
 `
 
-export const GameplayArea = ({ activeGame }: GameplayAreaProps) => {
+export const GameplayArea = ({ activeGame, onStartGameClick }: GameplayAreaProps) => {
   return (
-    <StyledGameplayArea activeGame={activeGame}>
+    <StyledGameplayArea $activeGame={activeGame}>
       {activeGame ? (
         <>
           <GameOverview {...activeGame.gameOverview} />
-          <Board {...activeGame.board} />
+          <Board {...activeGame.board} key={crypto.randomUUID()} />
         </>
       ) : (
-        <StyledButton>Start Game</StyledButton>
+        <StyledButton onClick={onStartGameClick}>Start Game</StyledButton>
       )}
     </StyledGameplayArea>
   )

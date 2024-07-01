@@ -1,4 +1,4 @@
-import { Board, BoardCell, PlayerMove } from './game'
+import { Board, BoardCell, PlayerMove } from './game-types'
 
 function getTargetCell(playerMove: PlayerMove) {
   const {

@@ -1,39 +1,40 @@
-import styled from "styled-components";
+import { Status } from '@/connect-4-domain/game-types'
+import styled from 'styled-components'
 
 export type GameStatusProps = {
-    gameStatus?: number
+  gameStatus: Status
 }
 
 const Wrapper = styled.div`
-    text-align: center;
-    background-color: blue;
-    color: white;
-    font-size: 1rem;
-    font-weight: 700;
-    font-family: monospace;
-    border-radius: 0 0 15px 15px;
+  text-align: center;
+  background-color: blue;
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: monospace;
+  border-radius: 0 0 15px 15px;
 `
 
 export const GameStatus = ({ gameStatus }: GameStatusProps) => {
-    let gameStatusString = "";
-    switch (gameStatus) {
-        case 0: 
-            gameStatusString = "Game in Progress..."
-            break
-        case 1: 
-            gameStatusString = "Player 1 Wins!"
-            break
-        case 2: 
-            gameStatusString = "Player 2 Wins!"
-            break 
-        case 3: 
-            gameStatusString = "It's a Tie!"
-            break
-    }
+  let gameStatusString = ''
+  switch (gameStatus) {
+    case Status.IN_PROGRESS:
+      gameStatusString = 'Game is in Progress...'
+      break
+    case Status.PLAYER_ONE_WIN:
+      gameStatusString = 'Player 1 Wins!'
+      break
+    case Status.PLAYER_TWO_WIN:
+      gameStatusString = 'Player 2 Wins!'
+      break
+    case Status.DRAW:
+      gameStatusString = "It's a Draw!"
+      break
+  }
 
-    return (
-        <Wrapper>
-            <p>{gameStatusString}</p>
-        </Wrapper>
-    )
+  return (
+    <Wrapper>
+      <p>{gameStatusString}</p>
+    </Wrapper>
+  )
 }

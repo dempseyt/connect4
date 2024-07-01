@@ -34,12 +34,13 @@ const ContentWrapper = styled.div`
   bottom: 0;
 `
 
-const StyledBoardCellDisc = styled.div<{ player?: 1 | 2 }>`
+const StyledBoardCellDisc = styled.div<{ $player: BoardCellProps['player'] }>`
   border-radius: 50%;
+  border: 5px solid darkblue;
   width: 100%;
   height: 100%;
-  background: ${({ player }) => {
-    switch (player) {
+  background: ${({ $player }) => {
+    switch ($player) {
       case 1:
         return 'red'
       case 2:
@@ -60,7 +61,7 @@ export const BoardCell = ({
     <StyledBoardCell className={className} id={id} onClick={onClick}>
       <AspectRatioBox>
         <ContentWrapper>
-          <StyledBoardCellDisc player={player} />
+          <StyledBoardCellDisc $player={player} />
         </ContentWrapper>
       </AspectRatioBox>
     </StyledBoardCell>
