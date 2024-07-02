@@ -7,11 +7,11 @@ export type GameStatusProps = {
 
 const Wrapper = styled.div`
   text-align: center;
-  background-color: blue;
+  background-color: darkblue;
   color: white;
   font-size: 1rem;
   font-weight: 700;
-  font-family: monospace;
+  font-family: 'BigBlueTerminal';
   border-radius: 0 0 15px 15px;
 `
 

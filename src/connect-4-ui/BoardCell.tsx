@@ -8,7 +8,7 @@ export type BoardCellProps = {
 }
 
 const StyledBoardCell = styled.div`
-  background: blue;
+  background: #1b75db;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,7 +16,7 @@ const StyledBoardCell = styled.div`
   height: 100%;
 `
 const AspectRatioBox = styled.div`
-  width: 70%;
+  width: 75%;
   position: relative;
 
   &:before {
@@ -37,8 +37,8 @@ const ContentWrapper = styled.div`
 const StyledBoardCellDisc = styled.div<{ $player: BoardCellProps['player'] }>`
   border-radius: 50%;
   border: 5px solid darkblue;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   background: ${({ $player }) => {
     switch ($player) {
       case 1:

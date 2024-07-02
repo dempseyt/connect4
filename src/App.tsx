@@ -1,89 +1,83 @@
-import { useState } from 'react'
-import { CommandTypes } from './connect-4-domain/commands'
+import { useRef, useState } from 'react'
 import GameFactory from './connect-4-domain/game'
-import { BoardProps } from './connect-4-ui/Board'
+import { BoardProps, GridCellProps } from './connect-4-ui/Board'
 import { GameOverviewProps } from './connect-4-ui/GameOverview'
 import { GameplayArea } from './connect-4-ui/GameplayArea'
+import { GameApi, createGameApi } from './connect-4-ui/create-game-api'
 
 function createHandleBoardCellClick(
-  game: GameFactory,
   setActiveGame: (activeGame: { gameOverview: GameOverviewProps; board: BoardProps }) => void,
+  gameApi: GameApi,
 ) {
-  return function handleBoardCellClick(row: number, column: number): void {
-    game.move({
-      type: CommandTypes.MOVE_PLAYER,
-      payload: {
-        player: game.getActivePlayer(),
-        targetCell: {
-          row: row,
-          column: column,
-        },
-      },
-    })
+  return function handleBoardCellClick({ rowIndex, columnIndex }: GridCellProps): void {
+    gameApi.getBoard()[rowIndex][columnIndex].handlePlayerMove(gameApi.getActivePlayer())
     setActiveGame({
       gameOverview: {
-        activePlayer: game.getActivePlayer(),
+        activePlayer: gameApi.getActivePlayer(),
         playerOne: {
           playerNumber: 1,
-          isActive: game.getActivePlayer() === 1,
-          remainingDisks: game.getPlayerStats(1).remainingDisks,
+          isActive: gameApi.getActivePlayer() === 1,
+          remainingDisks: gameApi.getRemainingDisks(1),
           playerColor: 'red',
         },
         playerTwo: {
           playerNumber: 2,
-          isActive: game.getActivePlayer() === 2,
-          remainingDisks: game.getPlayerStats(2).remainingDisks,
+          isActive: gameApi.getActivePlayer() === 2,
+          remainingDisks: gameApi.getRemainingDisks(2),
           playerColor: 'yellow',
         },
         roundNumber: 1,
-        gameStatus: game.getStatus(),
+        gameStatus: gameApi.getGameStatus(),
       },
-      board: { cells: game.getBoard(), onClick: createHandleBoardCellClick(game, setActiveGame) },
+      board: {
+        cells: gameApi.getBoard(),
+        onClick: createHandleBoardCellClick(setActiveGame, gameApi),
+      },
     })
   }
 }
 
 function createHandleStartGameClick(
-  setGame: (game: GameFactory) => void,
   setActiveGame: (activeGame: { gameOverview: GameOverviewProps; board: BoardProps }) => void,
+  gameApi: GameApi,
 ): () => void {
   return function handleStartGameClick(): void {
-    const game = new GameFactory()
-    setGame(game)
     setActiveGame({
       gameOverview: {
         roundNumber: 1,
         playerOne: {
           playerNumber: 1,
-          remainingDisks: game.getPlayerStats(1).remainingDisks,
-          isActive: game.getActivePlayer() === 1,
+          remainingDisks: gameApi.getRemainingDisks(1),
+          isActive: gameApi.getActivePlayer() === 1,
           playerColor: 'red',
         },
         playerTwo: {
           playerNumber: 2,
-          remainingDisks: game.getPlayerStats(2).remainingDisks,
-          isActive: game.getActivePlayer() === 2,
+          remainingDisks: gameApi.getRemainingDisks(2),
+          isActive: gameApi.getActivePlayer() === 2,
           playerColor: 'yellow',
         },
-        activePlayer: game.getActivePlayer(),
-        gameStatus: game.getStatus(),
+        activePlayer: gameApi.getActivePlayer(),
+        gameStatus: gameApi.getGameStatus(),
       },
-      board: { cells: game.getBoard(), onClick: createHandleBoardCellClick(game, setActiveGame) },
+      board: {
+        cells: gameApi.getBoard(),
+        onClick: createHandleBoardCellClick(setActiveGame, gameApi),
+      },
     })
   }
 }
 
 const App = () => {
-  const [game, setGame] = useState<GameFactory>()
   const [activeGame, setActiveGame] = useState<{
     gameOverview: GameOverviewProps
     board: BoardProps
   }>()
-
+  const gameApiRef = useRef(createGameApi(new GameFactory()))
   return (
     <GameplayArea
       activeGame={activeGame}
-      onStartGameClick={createHandleStartGameClick(setGame, setActiveGame)}
+      onStartGameClick={createHandleStartGameClick(setActiveGame, gameApiRef.current)}
     />
   )
 }

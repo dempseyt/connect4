@@ -5,10 +5,11 @@ export type RoundProps = {
 }
 
 const StyledRoundBanner = styled.div`
-  background-color: blue;
+  background-color: darkblue;
   color: white;
   font-size: 1rem;
   text-align: center;
+  font-family: 'BigBlueTerminal';
   font-weight: 700;
   padding-top: 10px;
   border-radius: 15px 15px 0 0;

@@ -3,9 +3,9 @@ import { EventTypes } from '@/connect-4-domain/events'
 import GameFactory from '@/connect-4-domain/game'
 import { BoardCellProps } from './BoardCell'
 
-type Player = 1 | 2
+export type Player = 1 | 2
 
-type MoveResult = {
+export type MoveResult = {
   isSuccess: boolean
   error?: Array<string>
 }
@@ -22,7 +22,7 @@ enum Status {
   PLAYER_TWO_WIN = 'PLAYER_TWO_WIN',
 }
 
-interface GameApi {
+export interface GameApi {
   getActivePlayer: () => Player
   getRemainingDisks: (player: Player) => number
   getGameStatus: () => Status
@@ -58,12 +58,12 @@ const createRowMapper =
 export function createGameApi(game: GameFactory): GameApi {
   const rowMapper = createRowMapper(game)
   const gameApi: GameApi = {
-    getActivePlayer: game.getActivePlayer,
+    getActivePlayer: () => game.getActivePlayer(),
     getRemainingDisks: (player: Player) => game.getPlayerStats(player).remainingDisks,
-    getGameStatus: game.getStatus,
+    getGameStatus: () => game.getStatus(),
     getBoard: () => {
       const gameBoard = game.getBoard()
-      const uiBoard = gameBoard.map(rowMapper)
+      const uiBoard: Array<Array<BoardCell>> = gameBoard.map(rowMapper)
       return uiBoard
     },
   }

@@ -15,7 +15,10 @@ export type GameOverviewProps = {
 
 const Wrapper = styled.div`
   display: flex;
+  margin-top: 50px;
   flex-direction: column;
+  border: 3px solid lightblue;
+  border-radius: 20px;
 `
 
 export const GameOverview = ({

@@ -13,17 +13,19 @@ export type GameplayAreaProps = {
 const StyledGameplayArea = styled.div<{ $activeGame: GameplayAreaProps['activeGame'] }>`
   display: flex;
   flex-wrap: wrap;
-  background-color: #24deff;
-  justify-content: ${({ $activeGame }) => ($activeGame === undefined ? 'center' : 'space-around')};
-  align-items: center;
+  background-color: #34495e;
+  gap: 20px;
+  justify-content: ${({ $activeGame }) => ($activeGame === undefined ? 'center' : 'center')};
+  align-items: ${({ $activeGame }) => ($activeGame === undefined ? 'center' : 'start')};
   height: 100vh;
 `
 
 const StyledButton = styled.button`
   padding: 20px 15px;
-  font-family: monospace;
+  font-family: 'BigBlueTerminal';
   font-size: 2rem;
-  background-color: lightblue;
+  background-color: inherit;
+  background-color: lightgrey;
   color: blue;
 `
 
@@ -36,7 +38,7 @@ export const GameplayArea = ({ activeGame, onStartGameClick }: GameplayAreaProps
           <Board {...activeGame.board} key={crypto.randomUUID()} />
         </>
       ) : (
-        <StyledButton onClick={onStartGameClick}>Start Game</StyledButton>
+        <StyledButton onClick={onStartGameClick}>Start Game...</StyledButton>
       )}
     </StyledGameplayArea>
   )

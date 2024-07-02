@@ -13,9 +13,9 @@ const Wrapper = styled.div`
   justify-content: end;
   flex-direction: column;
   background-color: lightblue;
-  color: blue;
+  color: darkblue;
   padding: 10px 20px 35px 20px;
-  font-family: monospace;
+  font-family: 'BigBlueTerminal';
   flex: 1;
   border-radius: 10px;
 `
@@ -24,7 +24,6 @@ const Row = styled.div`
   align-items: center;
   gap: 20px;
   height: 2.4rem;
-  margin-bottom: 10px;
 `
 const Token = styled.div<{
   $isActive: PlayerRoundOverviewProps['isActive']
@@ -38,10 +37,14 @@ const Token = styled.div<{
   border: ${({ $isActive }) => ($isActive ? '2px dashed black' : 'none')};
 `
 
+const TokenDiv = styled.div`
+  padding: 10px 0;
+`
+
 const StyledText = styled.p`
   margin: 0;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 500;
 `
 
 export const PlayerRoundOverview = ({
@@ -56,9 +59,9 @@ export const PlayerRoundOverview = ({
         <StyledText>{`Player: ${playerNumber} `}</StyledText>
       </Row>
       <StyledText>{`Turns Left: ${remainingDisks}`}</StyledText>
-      <div>
+      <TokenDiv>
         <Token $isActive={isActive} $playerColor={playerColor} />
-      </div>
+      </TokenDiv>
     </Wrapper>
   )
 }
