@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import GameFactory from './connect-4-domain/game'
 import { BoardProps, GridCellProps } from './connect-4-ui/Board'
 import { GameOverviewProps } from './connect-4-ui/GameOverview'
@@ -39,9 +39,9 @@ function createHandleBoardCellClick(
 
 function createHandleStartGameClick(
   setActiveGame: (activeGame: { gameOverview: GameOverviewProps; board: BoardProps }) => void,
-  gameApi: GameApi,
 ): () => void {
   return function handleStartGameClick(): void {
+    const gameApi = createGameApi(new GameFactory())
     setActiveGame({
       gameOverview: {
         roundNumber: 1,
@@ -73,11 +73,12 @@ const App = () => {
     gameOverview: GameOverviewProps
     board: BoardProps
   }>()
-  const gameApiRef = useRef(createGameApi(new GameFactory()))
+  // const gameApiRef = useRef(createGameApi(new GameFactory()))
+
   return (
     <GameplayArea
       activeGame={activeGame}
-      onStartGameClick={createHandleStartGameClick(setActiveGame, gameApiRef.current)}
+      onStartGameClick={createHandleStartGameClick(setActiveGame)}
     />
   )
 }

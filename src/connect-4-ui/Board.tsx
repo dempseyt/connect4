@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 export type BoardProps = {
   cells?: Array<Array<BoardCellProps>>
-  onClick: ({ rowIndex, columnIndex }: GridCellProps) => void
+  onClick?: ({ rowIndex, columnIndex }: GridCellProps) => void
 }
 
 export type GridCellProps = {
@@ -39,7 +39,7 @@ function createHandleBoardCellClick(
   }
 }
 
-export const Board = ({ cells = createCells(6, 7), onClick }: BoardProps) => {
+export const Board = ({ cells = createCells(6, 7), onClick = () => {} }: BoardProps) => {
   return (
     <StyledBoard $cells={cells} key={crypto.randomUUID()}>
       {cells.flatMap((row, rowIndex) =>

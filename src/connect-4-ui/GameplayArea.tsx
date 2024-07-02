@@ -20,13 +20,28 @@ const StyledGameplayArea = styled.div<{ $activeGame: GameplayAreaProps['activeGa
   height: 100vh;
 `
 
+const StyledGameInformation = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
+
 const StyledButton = styled.button`
-  padding: 20px 15px;
   font-family: 'BigBlueTerminal';
-  font-size: 2rem;
-  background-color: inherit;
-  background-color: lightgrey;
-  color: blue;
+  font-size: 1.5rem;
+  padding: 20px;
+  color: white;
+  background-color: darkblue;
+  border: 3px solid lightblue;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 export const GameplayArea = ({ activeGame, onStartGameClick }: GameplayAreaProps) => {
@@ -34,7 +49,10 @@ export const GameplayArea = ({ activeGame, onStartGameClick }: GameplayAreaProps
     <StyledGameplayArea $activeGame={activeGame}>
       {activeGame ? (
         <>
-          <GameOverview {...activeGame.gameOverview} />
+          <StyledGameInformation>
+            <GameOverview {...activeGame.gameOverview} />
+            <StyledButton onClick={onStartGameClick}>Start Again</StyledButton>
+          </StyledGameInformation>
           <Board {...activeGame.board} key={crypto.randomUUID()} />
         </>
       ) : (
