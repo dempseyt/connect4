@@ -1,6 +1,7 @@
 import { createMovePlayerCommand } from '@/connect-4-domain/commands'
 import { EventTypes } from '@/connect-4-domain/events'
 import GameFactory from '@/connect-4-domain/game'
+import { GameUuid } from '@/connect-4-domain/game-types'
 import { BoardCellProps } from './BoardCell'
 
 export type Player = 1 | 2
@@ -27,6 +28,8 @@ export interface GameApi {
   getRemainingDisks: (player: Player) => number
   getGameStatus: () => Status
   getBoard: () => Array<Array<BoardCell>>
+  saveGame: () => GameUuid
+  loadGame: (gameId: GameUuid) => void
 }
 
 const createRowMapper =
@@ -65,6 +68,12 @@ export function createGameApi(game: GameFactory): GameApi {
       const gameBoard = game.getBoard()
       const uiBoard: Array<Array<BoardCell>> = gameBoard.map(rowMapper)
       return uiBoard
+    },
+    saveGame: () => {
+      return game.save()
+    },
+    loadGame: (gameId: GameUuid) => {
+      game.load(gameId)
     },
   }
   return gameApi

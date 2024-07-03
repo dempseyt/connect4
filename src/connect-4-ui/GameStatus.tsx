@@ -13,6 +13,7 @@ const Wrapper = styled.div`
   font-weight: 700;
   font-family: 'BigBlueTerminal';
   border-radius: 0 0 15px 15px;
+  padding: 10px 0;
 `
 
 export const GameStatus = ({ gameStatus }: GameStatusProps) => {

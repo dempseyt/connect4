@@ -34,7 +34,7 @@ const Token = styled.div<{
   position: absolute;
   height: 30px;
   width: 30px;
-  border: ${({ $isActive }) => ($isActive ? '2px dashed black' : 'none')};
+  border: ${({ $isActive }) => ($isActive ? '2px dashed white' : 'none')};
 `
 
 const TokenDiv = styled.div`

@@ -1,9 +1,9 @@
+import GameFactory from '@/connect-4-domain/game'
+import { BoardProps, GridCellProps } from '@/connect-4-ui/Board'
+import { GameOverviewProps } from '@/connect-4-ui/GameOverview'
+import { GameplayArea } from '@/connect-4-ui/GameplayArea'
+import { GameApi, createGameApi } from '@/connect-4-ui/create-game-api'
 import { useState } from 'react'
-import GameFactory from './connect-4-domain/game'
-import { BoardProps, GridCellProps } from './connect-4-ui/Board'
-import { GameOverviewProps } from './connect-4-ui/GameOverview'
-import { GameplayArea } from './connect-4-ui/GameplayArea'
-import { GameApi, createGameApi } from './connect-4-ui/create-game-api'
 
 function createHandleBoardCellClick(
   setActiveGame: (activeGame: { gameOverview: GameOverviewProps; board: BoardProps }) => void,

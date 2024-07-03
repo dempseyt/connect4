@@ -37,8 +37,9 @@ const ContentWrapper = styled.div`
 const StyledBoardCellDisc = styled.div<{ $player: BoardCellProps['player'] }>`
   border-radius: 50%;
   border: 5px solid darkblue;
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
   background: ${({ $player }) => {
     switch ($player) {
       case 1:
@@ -49,6 +50,10 @@ const StyledBoardCellDisc = styled.div<{ $player: BoardCellProps['player'] }>`
         return 'white'
     }
   }};
+
+  &:hover {
+    background-color: #9e9b9ba2;
+  }
 `
 
 export const BoardCell = ({
