@@ -830,150 +830,49 @@ describe('game', () => {
             },
           }),
         )
-        expect(game.getBoard()).toMatchInlineSnapshot(`
-          [
-            [
-              {
-                "player": 1,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-            ],
-            [
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-            ],
-            [
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-            ],
-            [
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-            ],
-            [
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-            ],
-            [
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-              {
-                "player": undefined,
-              },
-            ],
-          ]
+        game.move(
+          createMovePlayerCommand({
+            player: 2,
+            targetCell: {
+              row: 1,
+              column: 0,
+            },
+          }),
+        )
+
+        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|---|---|---|
+          | 1 |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          | 2 |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|"
         `)
         game.restartGame()
-        expect(game.getBoard()).toMatchInlineSnapshot()
+        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|"
+        `)
         expect(game.getPlayerStats(1).remainingDisks).toEqual(21)
         expect(game.getPlayerStats(2).remainingDisks).toEqual(21)
         expect(game.getStatus()).toEqual(Status.IN_PROGRESS)
