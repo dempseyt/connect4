@@ -20,6 +20,6 @@ const StyledMenuButton = styled.button`
     transform: scale(0.97);
   }
 `
-export const MenuButton = ({ text, onClick }: MenuButtonProps) => (
-  <StyledMenuButton onClick={onClick}>{text}</StyledMenuButton>
-)
+export const MenuButton = ({ text, onClick }: MenuButtonProps) => {
+  return <StyledMenuButton onClick={onClick}>{text}</StyledMenuButton>
+}

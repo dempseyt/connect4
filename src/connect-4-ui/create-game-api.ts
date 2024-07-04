@@ -70,7 +70,8 @@ export function createGameApi(game: GameFactory): GameApi {
       return uiBoard
     },
     saveGame: () => {
-      return game.save()
+      const gameId = game.save()
+      return gameId
     },
     loadGame: (gameId: GameUuid) => {
       game.load(gameId)

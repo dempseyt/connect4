@@ -8,6 +8,6 @@ export default meta
 
 type Story = StoryObj<typeof SavedGame>
 
-export const TheOne: Story = {
+export const TheOneWithGameIdAndDateSaved: Story = {
   render: () => <SavedGame gameId={crypto.randomUUID()} dateSaved={new Date().toLocaleString()} />,
 }

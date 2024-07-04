@@ -38,6 +38,7 @@ class GameFactory implements Game {
   private activePlayer: PlayerNumber
   private status: Status
   private repository: GameRepository
+  private boardDimensions: BoardDimensions
 
   constructor(
     {
@@ -57,6 +58,7 @@ class GameFactory implements Game {
     this.activePlayer = 1
     this.status = Status.IN_PROGRESS
     this.repository = repository
+    this.boardDimensions = boardDimensions
   }
 
   #validateBoardDimensions(boardDimensions: BoardDimensions) {
@@ -197,6 +199,13 @@ class GameFactory implements Game {
 
   getActivePlayer(): PlayerNumber {
     return this.activePlayer
+  }
+
+  restartGame() {
+    this.board = this.#createBoard(this.boardDimensions)
+    this.players = this.#createPlayers(this.boardDimensions)
+    this.activePlayer = 1
+    this.status = Status.IN_PROGRESS
   }
 
   save(): GameUuid {

@@ -9,7 +9,10 @@ export type GameplayAreaProps = {
     gameOverview: GameOverviewProps
     board: BoardProps
   }
-  onStartGameClick?: () => void
+  handleStartGameClick?: () => void
+  handleSaveGameClick?: () => void
+  handleLoadGamesDialogClick?: () => void
+  handleRestartGameClick?: () => void
 }
 
 const StyledGameplayArea = styled.div<{ $activeGame: GameplayAreaProps['activeGame'] }>`
@@ -79,15 +82,25 @@ const StyledMenuButtons = styled.div`
   gap: 10px;
 `
 
-export const GameplayArea = ({ activeGame, onStartGameClick = () => {} }: GameplayAreaProps) => {
+const handleSourceCodeClick = () => {
+  window.open('https://github.com/dempseyt/connect4', '_blank')
+}
+
+export const GameplayArea = ({
+  activeGame,
+  handleStartGameClick = () => {},
+  handleSaveGameClick = () => {},
+  handleLoadGamesDialogClick = () => {},
+  handleRestartGameClick = () => {},
+}: GameplayAreaProps) => {
   return (
     <>
       <GamePlayAreaMenu>
         <StyledSmallTitle>Connect4</StyledSmallTitle>
         <StyledMenuButtons>
-          <MenuButton text={'Home'} />
-          <MenuButton text={'Saved Games'} />
-          <MenuButton text={'Source Code'} />
+          <MenuButton text={'Save Game'} onClick={handleSaveGameClick} />
+          <MenuButton text={'Load Game'} onClick={handleLoadGamesDialogClick} />
+          <MenuButton text={'Source Code'} onClick={handleSourceCodeClick} />
         </StyledMenuButtons>
       </GamePlayAreaMenu>
       <StyledGameplayArea $activeGame={activeGame}>
@@ -95,14 +108,14 @@ export const GameplayArea = ({ activeGame, onStartGameClick = () => {} }: Gamepl
           <StyledActiveGame>
             <StyledGameInformation>
               <GameOverview {...activeGame.gameOverview} />
-              <StyledButton onClick={onStartGameClick}>Start Again</StyledButton>
+              <StyledButton onClick={handleRestartGameClick}>Restart</StyledButton>
             </StyledGameInformation>
             <Board {...activeGame.board} key={crypto.randomUUID()} />
           </StyledActiveGame>
         ) : (
           <StyledStartGameContainer>
             <StyledTitle>Connect4</StyledTitle>
-            <StyledButton onClick={onStartGameClick}>Start Game...</StyledButton>
+            <StyledButton onClick={handleStartGameClick}>Start Game...</StyledButton>
           </StyledStartGameContainer>
         )}
       </StyledGameplayArea>

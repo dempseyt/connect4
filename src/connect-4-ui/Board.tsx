@@ -41,12 +41,12 @@ function createHandleBoardCellClick(
 
 export const Board = ({ cells = createCells(6, 7), onClick = () => {} }: BoardProps) => {
   return (
-    <StyledBoard $cells={cells} key={crypto.randomUUID()}>
+    <StyledBoard $cells={cells}>
       {cells.flatMap((row, rowIndex) =>
         row.map((cell, columnIndex) => (
           <GridElement
             onClick={createHandleBoardCellClick({ rowIndex, columnIndex }, onClick)}
-            key={cell.id}
+            key={`${rowIndex}-${columnIndex}`}
             $rowIndex={cells.length - rowIndex}
             $columnIndex={columnIndex + 1}
             player={cell.player}

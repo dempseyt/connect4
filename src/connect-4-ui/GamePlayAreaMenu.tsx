@@ -13,6 +13,7 @@ const StyledMenu = styled.menu`
   width: 100%;
   padding: 10px;
   flex-wrap: wrap;
+  z-index: 99;
 `
 
 export const GamePlayAreaMenu = ({
