@@ -7,7 +7,7 @@ import GameFactory, { InvalidBoardDimensionsError } from '@/connect-4-domain/gam
 import * as R from 'ramda'
 import { describe, expect, it } from 'vitest'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from './events'
-import { Board, BoardCell } from './game-types'
+import { Board, BoardCell, Status } from './game-types'
 import InMemoryRepository from './in-memory-repository'
 import _toAsciiTable from './to-ascii-table'
 
@@ -816,6 +816,167 @@ describe('game', () => {
           remainingDisks: 21,
         })
         expect(game.getStatus()).toEqual('IN_PROGRESS')
+      })
+    })
+    describe('restarting a game', () => {
+      it('resets the instance of Game to the starting values', () => {
+        const game = new GameFactory()
+        game.move(
+          createMovePlayerCommand({
+            player: 1,
+            targetCell: {
+              row: 0,
+              column: 0,
+            },
+          }),
+        )
+        expect(game.getBoard()).toMatchInlineSnapshot(`
+          [
+            [
+              {
+                "player": 1,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+            ],
+            [
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+            ],
+            [
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+            ],
+            [
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+            ],
+            [
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+            ],
+            [
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+              {
+                "player": undefined,
+              },
+            ],
+          ]
+        `)
+        game.restartGame()
+        expect(game.getBoard()).toMatchInlineSnapshot()
+        expect(game.getPlayerStats(1).remainingDisks).toEqual(21)
+        expect(game.getPlayerStats(2).remainingDisks).toEqual(21)
+        expect(game.getStatus()).toEqual(Status.IN_PROGRESS)
       })
     })
   })
