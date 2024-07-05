@@ -894,6 +894,10 @@ describe('game', () => {
 
         expect(game.delete(gameId)).toEqual(true)
       })
+      it('returns false if given an invalid game id', () => {
+        const game = new GameFactory()
+        expect(game.delete(crypto.randomUUID())).toEqual(false)
+      })
     })
   })
 })
