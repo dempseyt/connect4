@@ -878,5 +878,22 @@ describe('game', () => {
         expect(game.getStatus()).toEqual(Status.IN_PROGRESS)
       })
     })
+    describe('deleting a saved game', () => {
+      it('returns true if the saved game successfully deleted', () => {
+        const game = new GameFactory()
+        game.move(
+          createMovePlayerCommand({
+            player: 1,
+            targetCell: {
+              row: 0,
+              column: 0,
+            },
+          }),
+        )
+        const gameId = game.save()
+
+        expect(game.delete(gameId)).toEqual(true)
+      })
+    })
   })
 })
