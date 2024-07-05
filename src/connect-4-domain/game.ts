@@ -30,6 +30,7 @@ interface Game {
   move: (movePlayerCommand: MovePlayerCommand) => PlayerMoveFailedEvent | PlayerMovedEvent
   save: () => GameUuid
   load: (gameId: GameUuid) => void
+  delete: (gameId: GameUuid) => boolean
 }
 
 class GameFactory implements Game {
@@ -235,6 +236,10 @@ class GameFactory implements Game {
     } else {
       throw new Error('The provided game UUID is invalid.')
     }
+  }
+
+  delete(gameId: GameUuid) {
+    return this.repository?.delete(gameId)
   }
 }
 
