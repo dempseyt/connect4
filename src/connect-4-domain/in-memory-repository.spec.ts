@@ -87,7 +87,8 @@ describe('in-memory-repository', () => {
     it('deletes a saved game', () => {
       const repository = new InMemoryRepository()
       const gameId = repository.save(createPersistentGame())
-      repository.delete(gameId)
+      const wasDeleted = repository.delete(gameId)
+      expect(wasDeleted).toEqual(true)
       expect(repository.load(gameId)).toEqual(undefined)
     })
   })

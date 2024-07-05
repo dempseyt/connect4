@@ -9,6 +9,7 @@ export type GameplayAreaProps = {
     gameOverview: GameOverviewProps
     board: BoardProps
   }
+  currentGameId?: string
   handleStartGameClick?: () => void
   handleSaveGameClick?: () => void
   handleLoadGamesDialogClick?: () => void
@@ -82,12 +83,19 @@ const StyledMenuButtons = styled.div`
   gap: 10px;
 `
 
+const StyledGameId = styled.h3`
+  font-family: 'BigBlueTerminal';
+  color: aqua;
+  font-size: 0.7rem;
+`
+
 const handleSourceCodeClick = () => {
   window.open('https://github.com/dempseyt/connect4', '_blank')
 }
 
 export const GameplayArea = ({
   activeGame,
+  currentGameId,
   handleStartGameClick = () => {},
   handleSaveGameClick = () => {},
   handleLoadGamesDialogClick = () => {},
@@ -107,6 +115,7 @@ export const GameplayArea = ({
         {activeGame ? (
           <StyledActiveGame>
             <StyledGameInformation>
+              <StyledGameId>{currentGameId}</StyledGameId>
               <GameOverview {...activeGame.gameOverview} />
               <StyledButton onClick={handleRestartGameClick}>Restart</StyledButton>
             </StyledGameInformation>

@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import { SavedGame } from './SavedGame'
 
@@ -57,6 +58,12 @@ const StyledHeader = styled.div`
   padding: 5px 15px;
 `
 
+const StyledMsg = styled.p`
+  font-family: 'BigBlueTerminal';
+  text-align: center;
+  color: blue;
+`
+
 export const LoadGameDialog = ({ onCloseClick = () => {}, children }: LoadGameDialogProps) => {
   return (
     <StyledLoadGameDialog>
@@ -64,7 +71,13 @@ export const LoadGameDialog = ({ onCloseClick = () => {}, children }: LoadGameDi
         <StyledHeading>Saved Games</StyledHeading>
         <StyledCloseButton onClick={onCloseClick}>X</StyledCloseButton>
       </StyledHeader>
-      <StyledSavedGames>{children ?? 'Currently No Saved Games...'}</StyledSavedGames>
+      <StyledSavedGames>
+        {React.Children.count(children) === 0 ? (
+          <StyledMsg>Currently No Saved Games...</StyledMsg>
+        ) : (
+          children
+        )}
+      </StyledSavedGames>
     </StyledLoadGameDialog>
   )
 }
