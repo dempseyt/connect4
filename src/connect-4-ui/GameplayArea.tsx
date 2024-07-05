@@ -1,6 +1,7 @@
 import { Board, BoardProps } from '@/connect-4-ui/Board'
 import { GameOverview, GameOverviewProps } from '@/connect-4-ui/GameOverview'
 import styled from 'styled-components'
+import { v4 } from 'uuid'
 import { GamePlayAreaMenu } from './GamePlayAreaMenu'
 import { MenuButton } from './MenuButton'
 
@@ -122,7 +123,7 @@ export const GameplayArea = ({
               <GameOverview {...activeGame.gameOverview} />
               <StyledButton onClick={handleRestartGameClick}>New Game</StyledButton>
             </StyledGameInformation>
-            <Board {...activeGame.board} key={crypto.randomUUID()} />
+            <Board {...activeGame.board} key={v4()} />
           </StyledActiveGame>
         ) : (
           <StyledStartGameContainer>

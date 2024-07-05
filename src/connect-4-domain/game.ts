@@ -1,3 +1,4 @@
+import { v4 } from 'uuid'
 import { MovePlayerCommand } from './commands'
 import deepClone from './deep-clone'
 import {
@@ -210,7 +211,7 @@ class GameFactory implements Game {
   }
 
   save(): GameUuid {
-    const gameUuid = crypto.randomUUID()
+    const gameUuid = v4()
     if (this.repository !== undefined) {
       this.repository?.save(
         {

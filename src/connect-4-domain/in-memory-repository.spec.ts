@@ -1,4 +1,5 @@
 import InMemoryRepository from '@/connect-4-domain/in-memory-repository'
+import { v4 } from 'uuid'
 import { describe, expect, it } from 'vitest'
 import { Board, BoardCell, GameUuid, PersistentGame, Status } from './game-types'
 import parseAsciiTable from './parse-ascii-table'
@@ -50,7 +51,7 @@ describe('in-memory-repository', () => {
     })
     it('returns undefined when loading a non-existent game', () => {
       const repository = new InMemoryRepository()
-      const gameId = crypto.randomUUID()
+      const gameId = v4()
       expect(repository.load(gameId)).toBe(undefined)
     })
   })
@@ -66,7 +67,7 @@ describe('in-memory-repository', () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
       const persistentGame = createPersistentGame()
-      const gameId: GameUuid = crypto.randomUUID()
+      const gameId: GameUuid = v4()
       const retrievedBoardId = repository.save(persistentGame, gameId)
       expect(retrievedBoardId).toEqual(gameId)
       expect(store.get(gameId)).toMatchObject(persistentGame)
@@ -81,7 +82,7 @@ describe('in-memory-repository', () => {
     it('returns undefined when loading a non-existent game', () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
-      const gameId = crypto.randomUUID()
+      const gameId = v4()
       expect(repository.load(gameId)).toBe(undefined)
     })
     it('deletes a saved game', () => {

@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { v4 } from 'uuid'
 
 export type BoardCellProps = {
   player?: 1 | 2
@@ -56,12 +57,7 @@ const StyledBoardCellDisc = styled.div<{ $player: BoardCellProps['player'] }>`
   }
 `
 
-export const BoardCell = ({
-  player,
-  className,
-  id = crypto.randomUUID(),
-  onClick,
-}: BoardCellProps) => {
+export const BoardCell = ({ player, className, id = v4(), onClick }: BoardCellProps) => {
   return (
     <StyledBoardCell className={className} id={id} onClick={onClick}>
       <AspectRatioBox>

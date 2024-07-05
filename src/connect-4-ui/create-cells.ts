@@ -1,4 +1,5 @@
 import { BoardCellProps } from '@/connect-4-ui/BoardCell'
+import { v4 } from 'uuid'
 
 const createColumnCells = (
   numberOfRows: number = 0,
@@ -14,7 +15,7 @@ const createColumnCells = (
           .map(
             (): BoardCellProps => ({
               player: selectionStrategy(),
-              id: crypto.randomUUID(),
+              id: v4(),
             }),
           ),
     )

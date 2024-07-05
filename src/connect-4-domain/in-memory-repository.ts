@@ -1,3 +1,4 @@
+import { v4 } from 'uuid'
 import { GameRepository, GameUuid, PersistentGame } from './game-types'
 
 type Store = Map<GameUuid, PersistentGame>
@@ -9,7 +10,7 @@ class InMemoryRepository implements GameRepository {
     this.store = store
   }
 
-  save(persistentGame: PersistentGame, gameUuid: GameUuid = crypto.randomUUID()): GameUuid {
+  save(persistentGame: PersistentGame, gameUuid: GameUuid = v4()): GameUuid {
     this.store.set(gameUuid, persistentGame)
     return gameUuid
   }

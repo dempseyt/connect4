@@ -5,6 +5,7 @@ import {
 } from '@/connect-4-domain/commands'
 import GameFactory, { InvalidBoardDimensionsError } from '@/connect-4-domain/game'
 import * as R from 'ramda'
+import { v4 } from 'uuid'
 import { describe, expect, it } from 'vitest'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from './events'
 import { Board, BoardCell, Status } from './game-types'
@@ -180,7 +181,7 @@ describe('game', () => {
           it('throws an error', () => {
             const repository = new InMemoryRepository()
             const game = new GameFactory({ repository })
-            const invalidGameId = crypto.randomUUID()
+            const invalidGameId = v4()
             expect(() => {
               game.load(invalidGameId)
             }).toThrow('The provided game UUID is invalid.')
@@ -896,7 +897,7 @@ describe('game', () => {
       })
       it('returns false if given an invalid game id', () => {
         const game = new GameFactory()
-        expect(game.delete(crypto.randomUUID())).toEqual(false)
+        expect(game.delete(v4())).toEqual(false)
       })
     })
   })

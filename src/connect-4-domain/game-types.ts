@@ -49,4 +49,4 @@ export interface PlayerStats {
 
 export type PlayerNumber = 1 | 2
 
-export type GameUuid = `${string}-${string}-${string}-${string}-${string}`
+export type GameUuid = string

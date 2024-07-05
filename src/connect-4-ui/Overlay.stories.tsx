@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { Meta, StoryObj } from '@storybook/react'
 import styled from 'styled-components'
+import { v4 } from 'uuid'
 import { LoadGameDialog } from './LoadGameDialog'
 import { Overlay } from './Overlay'
 import { SavedGame } from './SavedGame'
@@ -65,10 +66,10 @@ export const TheOneWithLoadGamesDialogComponentWithSavedGames: Story = {
       componentSpec={{
         Component: ({ closeDialog }: { closeDialog: () => void }) => (
           <LoadGameDialog onCloseClick={closeDialog}>
-            <SavedGame gameId={crypto.randomUUID()} dateSaved={new Date().toLocaleDateString()} />
-            <SavedGame gameId={crypto.randomUUID()} dateSaved={new Date().toLocaleDateString()} />
-            <SavedGame gameId={crypto.randomUUID()} dateSaved={new Date().toLocaleDateString()} />
-            <SavedGame gameId={crypto.randomUUID()} dateSaved={new Date().toLocaleDateString()} />
+            <SavedGame gameId={v4()} dateSaved={new Date().toLocaleDateString()} />
+            <SavedGame gameId={v4()} dateSaved={new Date().toLocaleDateString()} />
+            <SavedGame gameId={v4()} dateSaved={new Date().toLocaleDateString()} />
+            <SavedGame gameId={v4()} dateSaved={new Date().toLocaleDateString()} />
           </LoadGameDialog>
         ),
         props: {
