@@ -36,16 +36,16 @@ const ContentWrapper = styled.div`
 
 const StyledBoardCellDisc = styled.div<{ $player: BoardCellProps['player'] }>`
   border-radius: 50%;
-  border: 5px solid darkblue;
+  border: 0.3rem solid darkblue;
   width: 100%;
   height: 100%;
   cursor: pointer;
   background: ${({ $player }) => {
     switch ($player) {
       case 1:
-        return 'red'
+        return '#ff5b5b'
       case 2:
-        return 'yellow'
+        return '#ffff77'
       default:
         return 'white'
     }

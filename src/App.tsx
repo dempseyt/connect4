@@ -64,14 +64,15 @@ function createHandleSaveGameClick(
   setCurrentGameId: (currentGameId: string) => void,
   currentGameId: string,
 ) {
-  return function handleSaveGameClick() {
-    if (currentGameId.length <= 32) {
+  if (currentGameId === '') {
+    return function handleSaveGameClick() {
       const gameId = gameApi.saveGame()
-      setCurrentGameId(`Game ID: ${gameId}`)
+      setCurrentGameId(gameId)
       savedGames.current.push({
         gameId: gameId,
         date: new Date().toLocaleString(),
       })
+      alert('Game Saved')
     }
   }
 }
@@ -87,7 +88,7 @@ function createHandleLoadGameClick(
     gameApi.loadGame(gameId)
     updateGame(setActiveGame, gameApi)
     setShowOverlay(false)
-    setCurrentGameId(`Current GameID: ${gameId}`)
+    setCurrentGameId(gameId)
   }
 }
 
@@ -105,7 +106,28 @@ function createHandleRestartGameClick(
   return function handleRestartGameClick() {
     gameApi.restartGame()
     updateGame(setActiveGame, gameApi)
-    setCurrentGameId('Game ID: No ID for current game.')
+    setCurrentGameId('')
+  }
+}
+
+function createHandleDeleteClick(
+  gameApi: GameApi,
+  gameId: GameUuid,
+  currentGameId: string,
+  setCurrentGameId: (currentGameId: string) => void,
+  savedGames: Array<{ gameId: GameUuid; date: string }>,
+  setShowOverlay: (showOverlay: boolean) => void,
+  setActiveGame: (activeGame: { gameOverview: GameOverviewProps; board: BoardProps }) => void,
+) {
+  return function handleDeleteClick() {
+    gameApi.deleteGame(gameId)
+    const isGameToDelete = ({ gameId: savedGameId }: { gameId: GameUuid; date: string }) =>
+      savedGameId === gameId
+    savedGames.splice(savedGames.findIndex(isGameToDelete), 1)
+    setShowOverlay(false)
+    gameApi.restartGame()
+    updateGame(setActiveGame, gameApi)
+    if (currentGameId === gameId) setCurrentGameId('')
   }
 }
 
@@ -115,7 +137,7 @@ const App = () => {
     board: BoardProps
   }>()
   const [showOverlay, setShowOverlay] = useState(false)
-  const [currentGameId, setCurrentGameId] = useState('Game ID: No ID for current game.')
+  const [currentGameId, setCurrentGameId] = useState('')
   const game = useRef(new GameFactory())
   const gameApi = useRef(createGameApi(game.current))
   const savedGames: MutableRefObject<Array<{ gameId: GameUuid; date: string }>> = useRef([])
@@ -133,12 +155,22 @@ const App = () => {
                         <SavedGame
                           gameId={gameId}
                           dateSaved={date}
+                          key={gameId}
                           handleLoadClick={createHandleLoadGameClick(
                             gameId,
                             gameApi.current,
                             setActiveGame,
                             setShowOverlay,
                             setCurrentGameId,
+                          )}
+                          handleDeleteClick={createHandleDeleteClick(
+                            gameApi.current,
+                            gameId,
+                            currentGameId,
+                            setCurrentGameId,
+                            savedGames.current,
+                            setShowOverlay,
+                            setActiveGame,
                           )}
                         ></SavedGame>
                       )

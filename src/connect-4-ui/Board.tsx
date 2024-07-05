@@ -14,7 +14,7 @@ export type GridCellProps = {
 
 const StyledBoard = styled.div<{ $cells: BoardProps['cells'] }>`
   display: grid;
-  margin-top: 50px;
+  margin-top: 1rem;
   border: 5px solid darkblue;
   grid-template-columns: ${({ $cells }) =>
     `repeat(${($cells as BoardCellProps[][])[0].length}, 1fr)`};

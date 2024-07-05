@@ -26,7 +26,7 @@ const StyledGameInformation = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-top: 50px;
+  margin-top: 1rem;
 `
 
 const StyledActiveGame = styled.div`
@@ -55,15 +55,15 @@ const StyledSmallTitle = styled.h4`
   font-family: 'BigBlueTerminal';
   font-size: 2rem;
   color: white;
-  padding-left: 15px;
+  padding-left: 0.8rem;
   margin-bottom: 0;
   letter-spacing: 3px;
 `
 
 const StyledButton = styled.button`
   font-family: 'BigBlueTerminal';
-  font-size: 1.5rem;
-  padding: 15px;
+  font-size: 1rem;
+  padding: 0.5rem;
   color: white;
   background-color: darkblue;
   border: 3px solid lightblue;
@@ -87,6 +87,7 @@ const StyledGameId = styled.h3`
   font-family: 'BigBlueTerminal';
   color: aqua;
   font-size: 0.7rem;
+  padding-left: 8px;
 `
 
 const handleSourceCodeClick = () => {
@@ -115,9 +116,11 @@ export const GameplayArea = ({
         {activeGame ? (
           <StyledActiveGame>
             <StyledGameInformation>
-              <StyledGameId>{currentGameId}</StyledGameId>
+              <StyledGameId>
+                Game ID: {currentGameId === '' ? 'No Game ID for current game' : currentGameId}
+              </StyledGameId>
               <GameOverview {...activeGame.gameOverview} />
-              <StyledButton onClick={handleRestartGameClick}>Restart</StyledButton>
+              <StyledButton onClick={handleRestartGameClick}>New Game</StyledButton>
             </StyledGameInformation>
             <Board {...activeGame.board} key={crypto.randomUUID()} />
           </StyledActiveGame>

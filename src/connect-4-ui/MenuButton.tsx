@@ -7,7 +7,7 @@ export type MenuButtonProps = {
 
 const StyledMenuButton = styled.button`
   font-family: 'BigBlueTerminal';
-  font-size: 1.5rem;
+  font-size: 1rem;
   padding: 10px 20px;
   border-radius: 50px;
 

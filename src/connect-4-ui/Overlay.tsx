@@ -25,8 +25,12 @@ const StyledOverlay = styled.div`
 
 export const Overlay = <T extends React.ComponentType<any>>({
   handleClose = () => {},
-  componentSpec: { Component, props } = { Component: () => <div></div>, props: {} },
+  componentSpec = {
+    Component: (() => <></>) as unknown as T,
+    props: {} as React.ComponentProps<T>,
+  },
 }: OverlayProps<T> = {}) => {
+  const { Component, props } = componentSpec
   return (
     <StyledOverlay onClick={handleClose}>
       <Component {...props} />
