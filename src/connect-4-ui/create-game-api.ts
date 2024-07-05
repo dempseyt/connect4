@@ -31,6 +31,7 @@ export interface GameApi {
   saveGame: () => GameUuid
   loadGame: (gameId: GameUuid) => void
   restartGame: () => void
+  deleteGame: (gameId: GameUuid) => boolean
 }
 
 const createRowMapper =
@@ -79,6 +80,9 @@ export function createGameApi(game: GameFactory): GameApi {
     },
     restartGame: () => {
       game.restartGame()
+    },
+    deleteGame: (gameId: GameUuid) => {
+      return game.delete(gameId)
     },
   }
   return gameApi
