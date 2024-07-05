@@ -84,5 +84,11 @@ describe('in-memory-repository', () => {
       const gameId = crypto.randomUUID()
       expect(repository.load(gameId)).toBe(undefined)
     })
+    it('deletes a saved game', () => {
+      const repository = new InMemoryRepository()
+      const gameId = repository.save(createPersistentGame())
+      repository.delete(gameId)
+      expect(repository.load(gameId)).toEqual(undefined)
+    })
   })
 })
