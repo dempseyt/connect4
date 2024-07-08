@@ -15,6 +15,7 @@ export type GameplayAreaProps = {
   handleSaveGameClick?: () => void
   handleLoadGamesDialogClick?: () => void
   handleRestartGameClick?: () => void
+  handleHomeClick?: () => void
 }
 
 const StyledGameplayArea = styled.div<{ $activeGame: GameplayAreaProps['activeGame'] }>`
@@ -102,12 +103,14 @@ export const GameplayArea = ({
   handleSaveGameClick = () => {},
   handleLoadGamesDialogClick = () => {},
   handleRestartGameClick = () => {},
+  handleHomeClick = () => {},
 }: GameplayAreaProps) => {
   return (
     <>
       <GamePlayAreaMenu>
         <StyledSmallTitle>Connect4</StyledSmallTitle>
         <StyledMenuButtons>
+          <MenuButton text={'Home'} onClick={handleHomeClick} />
           <MenuButton text={'Save Game'} onClick={handleSaveGameClick} />
           <MenuButton text={'Load Game'} onClick={handleLoadGamesDialogClick} />
           <MenuButton text={'Source Code'} onClick={handleSourceCodeClick} />

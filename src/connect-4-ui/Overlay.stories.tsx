@@ -50,7 +50,7 @@ export const TheOneWithLoadGamesDialogComponent: Story = {
     <Overlay
       componentSpec={{
         Component: ({ closeDialog }: { closeDialog: () => void }) => (
-          <LoadGameDialog onCloseClick={closeDialog}></LoadGameDialog>
+          <LoadGameDialog handleCloseClick={closeDialog}></LoadGameDialog>
         ),
         props: {
           closeDialog: () => action('Clicked'),
@@ -65,7 +65,7 @@ export const TheOneWithLoadGamesDialogComponentWithSavedGames: Story = {
     <Overlay
       componentSpec={{
         Component: ({ closeDialog }: { closeDialog: () => void }) => (
-          <LoadGameDialog onCloseClick={closeDialog}>
+          <LoadGameDialog handleCloseClick={closeDialog}>
             <SavedGame gameId={v4()} dateSaved={new Date().toLocaleDateString()} />
             <SavedGame gameId={v4()} dateSaved={new Date().toLocaleDateString()} />
             <SavedGame gameId={v4()} dateSaved={new Date().toLocaleDateString()} />

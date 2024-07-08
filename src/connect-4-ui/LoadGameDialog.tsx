@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { SavedGame } from './SavedGame'
 
 type LoadGameDialogProps = {
-  onCloseClick?: () => void
+  handleCloseClick?: () => void
   children?: Array<React.ReactElement<typeof SavedGame>> | React.ReactElement<typeof SavedGame>
 }
 
@@ -66,12 +66,12 @@ const StyledMsg = styled.p`
   color: blue;
 `
 
-export const LoadGameDialog = ({ onCloseClick = () => {}, children }: LoadGameDialogProps) => {
+export const LoadGameDialog = ({ handleCloseClick = () => {}, children }: LoadGameDialogProps) => {
   return (
     <StyledLoadGameDialog>
       <StyledHeader>
         <StyledHeading>Saved Games</StyledHeading>
-        <StyledCloseButton onClick={onCloseClick}>X</StyledCloseButton>
+        <StyledCloseButton onClick={handleCloseClick}>X</StyledCloseButton>
       </StyledHeader>
       <StyledSavedGames>
         {React.Children.count(children) === 0 ? (

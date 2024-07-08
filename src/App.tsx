@@ -165,8 +165,8 @@ const App = () => {
         createPortal(
           <Overlay
             componentSpec={{
-              Component: ({ onCloseDialogClick }: { onCloseDialogClick: () => void }) => (
-                <LoadGameDialog onCloseClick={onCloseDialogClick}>
+              Component: ({ handleCloseDialogClick }: { handleCloseDialogClick: () => void }) => (
+                <LoadGameDialog handleCloseClick={handleCloseDialogClick}>
                   {savedGames.current.map(
                     ({ gameId, date }: { gameId: GameUuid; date: string }) => {
                       return (
@@ -198,7 +198,7 @@ const App = () => {
                 </LoadGameDialog>
               ),
               props: {
-                onCloseDialogClick: () => setShowOverlay(false),
+                handleCloseDialogClick: () => setShowOverlay(false),
               },
             }}
           />,
@@ -222,6 +222,7 @@ const App = () => {
           gameApi.current,
           setCurrentGameId,
         )}
+        handleHomeClick={() => window.location.reload()}
       />
     </>
   )

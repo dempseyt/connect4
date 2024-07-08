@@ -14,5 +14,5 @@ export const TheOneWithNoSavedGames: Story = {
 }
 
 export const TheOneWithACloseDialogClickHandler: Story = {
-  render: () => <LoadGameDialog onCloseClick={action('Clicked')} />,
+  render: () => <LoadGameDialog handleCloseClick={action('Clicked')} />,
 }
