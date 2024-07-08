@@ -49,6 +49,15 @@ const StyledDeleteButton = styled.button`
 const StyledCurrentGameNotifier = styled.p`
   color: blue;
   font-family: 'BigBlueTerminal';
+  font-size: 0.7rem;
+`
+
+const StyledText = styled.p`
+  font-size: 0.8rem;
+`
+
+const StyledGameId = styled.h4`
+  font-size: 1.1rem;
 `
 
 export const SavedGame = ({
@@ -61,8 +70,8 @@ export const SavedGame = ({
   return (
     <StyledSavedGame>
       <StyledSavedDetails>
-        <h3>Game ID: {gameId}</h3>
-        <p>Saved: {dateSaved}</p>
+        <StyledGameId>Game ID: {gameId}</StyledGameId>
+        <StyledText>Saved: {dateSaved}</StyledText>
         <StyledCurrentGameNotifier>
           {isCurrentGame ? 'You are currently in this game' : ''}
         </StyledCurrentGameNotifier>
