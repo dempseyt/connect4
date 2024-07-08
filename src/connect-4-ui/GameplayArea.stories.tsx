@@ -1,3 +1,4 @@
+import { Status } from '@/connect-4-domain/game-types'
 import createCells from '@/connect-4-ui/create-cells'
 import { action } from '@storybook/addon-actions'
 import { Meta, StoryObj } from '@storybook/react'
@@ -34,7 +35,7 @@ export const TheOneWithAGameInProgress: Story = {
             playerColor: 'yellow',
           },
           roundNumber: 1,
-          gameStatus: 1,
+          gameStatus: Status.IN_PROGRESS,
         },
         board: { cells: createCells(6, 7) },
       }}
@@ -43,5 +44,5 @@ export const TheOneWithAGameInProgress: Story = {
 }
 
 export const TheOneWithAStartGameClickHandler: Story = {
-  render: () => <GameplayArea onStartGameClick={action('Start Game')} />,
+  render: () => <GameplayArea handleStartGameClick={action('Start Game')} />,
 }

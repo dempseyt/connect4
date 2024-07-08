@@ -1,4 +1,4 @@
-import { BoardCell, PlayerMove } from '@/connect-4-domain/game'
+import { BoardCell, PlayerMove } from '@/connect-4-domain/game-types'
 import isWinningMove from '@/connect-4-domain/get-is-winning-move'
 import { describe, expect, it } from 'vitest'
 import parseAsciiTable from './parse-ascii-table'
@@ -33,9 +33,7 @@ describe('is-winning-move', () => {
               column: 3,
             },
           } as PlayerMove
-          expect(isWinningMove(board, playerMove)).toEqual({
-            isWin: true,
-          })
+          expect(isWinningMove(board, playerMove).isWin).toEqual(true)
         })
       })
       describe('and there are 3 of the moving players disks to the right of the target cell', () => {
@@ -74,9 +72,7 @@ describe('is-winning-move', () => {
                 column: 1,
               },
             } as PlayerMove
-            expect(isWinningMove(board, playerMove)).toEqual({
-              isWin: false,
-            })
+            expect(isWinningMove(board, playerMove).isWin).toEqual(false)
           })
         })
       })
@@ -492,7 +488,6 @@ describe('is-winning-move', () => {
       })
     })
   })
-
   describe('given a board and the next players move', () => {
     describe('and there are less than 4 rows on the board', () => {
       it('does not result in a win', () => {
@@ -512,9 +507,7 @@ describe('is-winning-move', () => {
 |   |        
 |---|`
         const board = parseAsciiTable(asciiTable, customResolver)
-        expect(isWinningMove(board, playerMove)).toEqual({
-          isWin: false,
-        })
+        expect(isWinningMove(board, playerMove).isWin).toEqual(false)
       })
     })
   })

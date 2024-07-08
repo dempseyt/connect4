@@ -1,14 +1,15 @@
 import GameFactory from '@/connect-4-domain/game'
 import { BoardProps, GridCellProps } from '@/connect-4-ui/Board'
+import { GameApi, createGameApi } from '@/connect-4-ui/create-game-api'
 import { GameOverviewProps } from '@/connect-4-ui/GameOverview'
 import { GameplayArea } from '@/connect-4-ui/GameplayArea'
-import { GameApi, createGameApi } from '@/connect-4-ui/create-game-api'
-import { MutableRefObject, useRef, useState } from 'react'
+import { MutableRefObject, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { GameUuid } from './connect-4-domain/game-types'
+import { GameUuid, Status } from './connect-4-domain/game-types'
 import { LoadGameDialog } from './connect-4-ui/LoadGameDialog'
 import { Overlay } from './connect-4-ui/Overlay'
 import { SavedGame } from './connect-4-ui/SavedGame'
+import { SaveGameOverlay } from './connect-4-ui/SaveGameOverlay'
 
 function updateGame(
   setActiveGame: (activeGame: { gameOverview: GameOverviewProps; board: BoardProps }) => void,
@@ -44,8 +45,10 @@ function createHandleBoardCellClick(
   gameApi: GameApi,
 ) {
   return function handleBoardCellClick({ rowIndex, columnIndex }: GridCellProps): void {
-    gameApi.getBoard()[rowIndex][columnIndex].handlePlayerMove(gameApi.getActivePlayer())
-    updateGame(setActiveGame, gameApi)
+    if (gameApi.getGameStatus() === Status.IN_PROGRESS) {
+      gameApi.getBoard()[rowIndex][columnIndex].handlePlayerMove(gameApi.getActivePlayer())
+      updateGame(setActiveGame, gameApi)
+    }
   }
 }
 
@@ -63,6 +66,7 @@ function createHandleSaveGameClick(
   savedGames: MutableRefObject<Array<{ gameId: GameUuid; date: string }>>,
   setCurrentGameId: (currentGameId: string) => void,
   currentGameId: string,
+  setSaveGameOverlay: (saveGameOverlay: boolean) => void,
 ) {
   if (currentGameId === '') {
     return function handleSaveGameClick() {
@@ -72,7 +76,7 @@ function createHandleSaveGameClick(
         gameId: gameId,
         date: new Date().toLocaleString(),
       })
-      alert('Game Saved')
+      setSaveGameOverlay(true)
     }
   }
 }
@@ -124,10 +128,14 @@ function createHandleDeleteClick(
     const isGameToDelete = ({ gameId: savedGameId }: { gameId: GameUuid; date: string }) =>
       savedGameId === gameId
     savedGames.splice(savedGames.findIndex(isGameToDelete), 1)
-    setShowOverlay(false)
-    gameApi.restartGame()
+    if (currentGameId === gameId) {
+      gameApi.restartGame()
+      setCurrentGameId('')
+    }
     updateGame(setActiveGame, gameApi)
-    if (currentGameId === gameId) setCurrentGameId('')
+    if (savedGames.length === 0) {
+      setShowOverlay(false)
+    }
   }
 }
 
@@ -137,10 +145,20 @@ const App = () => {
     board: BoardProps
   }>()
   const [showOverlay, setShowOverlay] = useState(false)
+  const [saveGameOverlay, setSaveGameOverlay] = useState(false)
   const [currentGameId, setCurrentGameId] = useState('')
   const game = useRef(new GameFactory())
   const gameApi = useRef(createGameApi(game.current))
   const savedGames: MutableRefObject<Array<{ gameId: GameUuid; date: string }>> = useRef([])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSaveGameOverlay(false)
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  })
+
   return (
     <>
       {showOverlay &&
@@ -155,6 +173,7 @@ const App = () => {
                         <SavedGame
                           gameId={gameId}
                           dateSaved={date}
+                          isCurrentGame={currentGameId === gameId}
                           key={gameId}
                           handleLoadClick={createHandleLoadGameClick(
                             gameId,
@@ -185,6 +204,7 @@ const App = () => {
           />,
           document.body,
         )}
+      {saveGameOverlay && <SaveGameOverlay />}
       <GameplayArea
         activeGame={activeGame}
         currentGameId={currentGameId}
@@ -194,6 +214,7 @@ const App = () => {
           savedGames,
           setCurrentGameId,
           currentGameId,
+          setSaveGameOverlay,
         )}
         handleLoadGamesDialogClick={createHandleLoadGamesDialogClick(setShowOverlay)}
         handleRestartGameClick={createHandleRestartGameClick(

@@ -11,6 +11,8 @@ const StyledLoadGameDialog = styled.div`
   border: 2px solid darkblue;
   border-radius: 20px;
   background-color: lightblue;
+  max-height: 80vh;
+  overflow-y: auto;
 `
 
 const StyledHeading = styled.h1`

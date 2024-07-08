@@ -20,7 +20,7 @@ export type GameplayAreaProps = {
 const StyledGameplayArea = styled.div<{ $activeGame: GameplayAreaProps['activeGame'] }>`
   background-color: #34495e;
   align-items: ${({ $activeGame }) => ($activeGame === undefined ? 'center' : 'start')};
-  height: 100vh;
+  height: fit-content;
 `
 
 const StyledGameInformation = styled.div`
@@ -42,12 +42,12 @@ const StyledStartGameContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 80vh;
 `
 
 const StyledTitle = styled.h1`
   font-family: 'BigBlueTerminal';
-  font-size: 6rem;
+  font-size: 3.5rem;
   color: white;
   letter-spacing: 3px;
 `

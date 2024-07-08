@@ -1,4 +1,4 @@
-import { Board, BoardCell, PlayerMove } from './game-types'
+import { Board, BoardCell, PlayerMove } from '@/connect-4-domain/game-types'
 
 function getTargetCell(playerMove: PlayerMove) {
   const {
@@ -9,9 +9,11 @@ function getTargetCell(playerMove: PlayerMove) {
 
 function isThereThreeInARow(requiredCellsToCheck: Array<BoardCell>, activePlayer: 1 | 2): boolean {
   let count = 0
+
   for (const cell of requiredCellsToCheck) {
     if (cell.player === activePlayer) {
       count++
+
       if (count === 3) break
     } else {
       count = 0
@@ -47,7 +49,8 @@ function isHorizontalWin(board: Board, playerMove: PlayerMove): { isWin: boolean
     ...getUpToThreeDisksHorizontallyToRightOfTargetCell(board, playerMove),
   ]
   const activePlayer = playerMove.player
-  return { isWin: isThereThreeInARow(accumulatedCellsAroundTargetCell, activePlayer) }
+  const isWin = isThereThreeInARow(accumulatedCellsAroundTargetCell, activePlayer)
+  return { isWin }
 }
 
 function getUpToThreeDisksUnderneathTargetCell(

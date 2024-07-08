@@ -35,13 +35,15 @@ const ContentWrapper = styled.div`
   bottom: 0;
 `
 
-const StyledBoardCellDisc = styled.div<{ $player: BoardCellProps['player'] }>`
+const StyledBoardCellDisc = styled.div<{
+  $player: BoardCellProps['player']
+}>`
   border-radius: 50%;
   border: 0.3rem solid darkblue;
   width: 100%;
   height: 100%;
   cursor: pointer;
-  background: ${({ $player }) => {
+  background-color: ${({ $player }) => {
     switch ($player) {
       case 1:
         return '#ff5b5b'
@@ -53,7 +55,9 @@ const StyledBoardCellDisc = styled.div<{ $player: BoardCellProps['player'] }>`
   }};
 
   &:hover {
-    background-color: #9e9b9ba2;
+    background-color: ${({ $player }) => {
+      return $player === undefined ? '#9e9b9ba2' : '#0000000'
+    }};
   }
 `
 

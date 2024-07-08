@@ -54,16 +54,16 @@ class GameFactory implements Game {
       repository: new InMemoryRepository(),
     },
   ) {
-    this.#validateBoardDimensions(boardDimensions)
-    this.board = this.#createBoard(boardDimensions)
-    this.players = this.#createPlayers(boardDimensions)
+    this.validateBoardDimensions(boardDimensions)
+    this.board = this.createBoard(boardDimensions)
+    this.players = this.createPlayers(boardDimensions)
     this.activePlayer = 1
     this.status = Status.IN_PROGRESS
     this.repository = repository
     this.boardDimensions = boardDimensions
   }
 
-  #validateBoardDimensions(boardDimensions: BoardDimensions) {
+  private validateBoardDimensions(boardDimensions: BoardDimensions) {
     if (boardDimensions.rows < 1) {
       throw new InvalidBoardDimensionsError('Number of rows must be greater than or equal to 1')
     } else if (boardDimensions.columns < 1) {
@@ -75,13 +75,13 @@ class GameFactory implements Game {
     }
   }
 
-  #createBoard({ rows, columns }: BoardDimensions): Board {
+  private createBoard({ rows, columns }: BoardDimensions): Board {
     const callback = () => new Array(columns).fill(undefined).map(() => ({ player: undefined }))
     const board = new Array(rows).fill(undefined).map(callback)
     return board
   }
 
-  #createPlayers({ rows, columns }: BoardDimensions): Record<PlayerNumber, PlayerStats> {
+  private createPlayers({ rows, columns }: BoardDimensions): Record<PlayerNumber, PlayerStats> {
     const calculateRemainingDiscs = (rows * columns) / 2
     return {
       1: { playerNumber: 1, remainingDisks: calculateRemainingDiscs },
@@ -89,28 +89,28 @@ class GameFactory implements Game {
     }
   }
 
-  #getIsCellOnBoard(row: number, column: number): boolean {
-    return this.#getIsRowValid(row) && this.#getIsColumnValid(column)
+  getIsCellOnBoard(row: number, column: number): boolean {
+    return this.getIsRowValid(row) && this.getIsColumnValid(column)
   }
 
-  #getIsRowValid(row: number): boolean {
+  getIsRowValid(row: number): boolean {
     return row >= 0 && row < this.board.length
   }
 
-  #getIsColumnValid(column: number): boolean {
+  private getIsColumnValid(column: number): boolean {
     return column >= 0 && column < this.board[0].length
   }
 
-  #getIsCellUnoccupied(row: number, column: number): boolean {
+  getIsCellUnoccupied(row: number, column: number): boolean {
     return this.board[row][column].player === undefined
   }
 
-  #getIsCellUnderneathOccupied(row: number, column: number): boolean {
+  getIsCellUnderneathOccupied(row: number, column: number): boolean {
     if (row === 0) return true
     return this.board[row - 1][column].player !== undefined
   }
 
-  #createValidatedMove(
+  private createValidatedMove(
     moveFunction: (movePlayerCommand: MovePlayerCommand) => PlayerMovedEvent,
   ): (movePlayerCommand: MovePlayerCommand) => PlayerMoveFailedEvent | PlayerMovedEvent {
     function validatedMove(
@@ -133,26 +133,27 @@ class GameFactory implements Game {
         const message = `Player ${player} cannot move as player ${this.getActivePlayer() === 1 ? 1 : 2} is currently active.`
         return createPlayerMoveFailedEvent({ message: message })
       }
+
       if (
-        this.#getIsCellOnBoard(row, column) &&
-        this.#getIsCellUnoccupied(row, column) &&
-        this.#getIsCellUnderneathOccupied(row, column)
+        this.getIsCellOnBoard(row, column) &&
+        this.getIsCellUnoccupied(row, column) &&
+        this.getIsCellUnderneathOccupied(row, column)
       ) {
         return moveFunction(movePlayerCommand)
       }
 
-      if (!this.#getIsCellOnBoard(row, column)) {
+      if (!this.getIsCellOnBoard(row, column)) {
         let message = `The cell at row ${row} column ${column} does not exist on the board.`
-        if (!this.#getIsRowValid(row)) {
+        if (!this.getIsRowValid(row)) {
           message += ` The row number must be >= 0 and <= ${this.board.length - 1}.`
         }
-        if (!this.#getIsColumnValid(column)) {
+        if (!this.getIsColumnValid(column)) {
           message += ` The column number must be >= 0 and <= ${this.board[0].length - 1}.`
         }
         return createPlayerMoveFailedEvent({ message: message })
       }
 
-      if (!this.#getIsCellUnderneathOccupied(row, column)) {
+      if (!this.getIsCellUnderneathOccupied(row, column)) {
         const message = `The cell at row ${row} column ${column} cannot be placed there as there is no disk in the row below.`
         return createPlayerMoveFailedEvent({ message: message })
       }
@@ -163,7 +164,7 @@ class GameFactory implements Game {
     return validatedMove
   }
 
-  #_move({
+  private _move({
     payload: {
       player,
       targetCell: { row, column },
@@ -185,7 +186,7 @@ class GameFactory implements Game {
     return createPlayerMovedEvent({ player, targetCell: { row, column } })
   }
 
-  move = this.#createValidatedMove(this.#_move.bind(this))
+  move = this.createValidatedMove(this._move.bind(this))
 
   getBoard() {
     return deepClone(this.board)
@@ -204,8 +205,8 @@ class GameFactory implements Game {
   }
 
   restartGame() {
-    this.board = this.#createBoard(this.boardDimensions)
-    this.players = this.#createPlayers(this.boardDimensions)
+    this.board = this.createBoard(this.boardDimensions)
+    this.players = this.createPlayers(this.boardDimensions)
     this.activePlayer = 1
     this.status = Status.IN_PROGRESS
   }

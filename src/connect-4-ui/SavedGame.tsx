@@ -6,6 +6,7 @@ type SavedGameProps = {
   dateSaved: string
   handleLoadClick?: () => void
   handleDeleteClick?: () => void
+  isCurrentGame?: boolean
 }
 
 const StyledSavedGame = styled.div`
@@ -45,17 +46,26 @@ const StyledDeleteButton = styled.button`
     cursor: pointer;
   }
 `
+const StyledCurrentGameNotifier = styled.p`
+  color: blue;
+  font-family: 'BigBlueTerminal';
+`
+
 export const SavedGame = ({
   gameId,
   dateSaved,
   handleLoadClick = () => {},
   handleDeleteClick = () => {},
+  isCurrentGame,
 }: SavedGameProps) => {
   return (
     <StyledSavedGame>
       <StyledSavedDetails>
         <h3>Game ID: {gameId}</h3>
         <p>Saved: {dateSaved}</p>
+        <StyledCurrentGameNotifier>
+          {isCurrentGame ? 'You are currently in this game' : ''}
+        </StyledCurrentGameNotifier>
       </StyledSavedDetails>
       <StyledButtons>
         <StyledLoadButton onClick={handleLoadClick}>Load</StyledLoadButton>

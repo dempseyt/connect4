@@ -25,6 +25,7 @@
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  background-color: #34495e;
 }
 /*
   5. Improve media defaults
@@ -64,4 +65,23 @@ h6 {
 #root,
 #__next {
   isolation: isolate;
+}
+
+/* Add this CSS to your global styles or a CSS file */
+.fade-enter {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+
+.fade-enter-active {
+  opacity: 1;
+}
+
+.fade-exit {
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+
+.fade-exit-active {
+  opacity: 0;
 }
