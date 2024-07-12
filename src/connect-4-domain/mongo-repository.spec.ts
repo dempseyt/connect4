@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import MongoRepository from './mongo-repository'
 
 describe('mongo-repository', () => {
   describe('given defaults', () => {
