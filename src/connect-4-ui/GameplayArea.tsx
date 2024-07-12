@@ -11,7 +11,6 @@ export type GameplayAreaProps = {
     board: BoardProps
   }
   currentGameId?: string
-  handleStartGameClick?: () => void
   handleSaveGameClick?: () => void
   handleLoadGamesDialogClick?: () => void
   handleRestartGameClick?: () => void
@@ -99,7 +98,6 @@ const handleSourceCodeClick = () => {
 export const GameplayArea = ({
   activeGame,
   currentGameId,
-  handleStartGameClick = () => {},
   handleSaveGameClick = () => {},
   handleLoadGamesDialogClick = () => {},
   handleRestartGameClick = () => {},
@@ -131,7 +129,7 @@ export const GameplayArea = ({
         ) : (
           <StyledStartGameContainer>
             <StyledTitle>Connect4</StyledTitle>
-            <StyledButton onClick={handleStartGameClick}>Start Game...</StyledButton>
+            <StyledButton onClick={handleRestartGameClick}>Start Game...</StyledButton>
           </StyledStartGameContainer>
         )}
       </StyledGameplayArea>

@@ -1,6 +1,5 @@
 import { Status } from '@/connect-4-domain/game-types'
 import createCells from '@/connect-4-ui/create-cells'
-import { action } from '@storybook/addon-actions'
 import { Meta, StoryObj } from '@storybook/react'
 import { GameplayArea } from './GameplayArea'
 
@@ -41,8 +40,4 @@ export const TheOneWithAGameInProgress: Story = {
       }}
     />
   ),
-}
-
-export const TheOneWithAStartGameClickHandler: Story = {
-  render: () => <GameplayArea handleStartGameClick={action('Start Game')} />,
 }

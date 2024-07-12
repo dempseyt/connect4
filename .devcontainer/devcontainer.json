@@ -1,0 +1,7 @@
+{
+  "name": "connect4-app",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${workspaceFolderBasename}",
+  "dockerComposeFile": "docker-compose.yml",
+  "forwardPorts": [8080]
+}

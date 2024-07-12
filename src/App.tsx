@@ -52,15 +52,6 @@ function createHandleBoardCellClick(
   }
 }
 
-function createHandleStartGameClick(
-  setActiveGame: (activeGame: { gameOverview: GameOverviewProps; board: BoardProps }) => void,
-  gameApi: GameApi,
-): () => void {
-  return function handleStartGameClick(): void {
-    updateGame(setActiveGame, gameApi)
-  }
-}
-
 function createHandleSaveGameClick(
   gameApi: GameApi,
   savedGames: MutableRefObject<Array<{ gameId: GameUuid; date: string }>>,
@@ -208,7 +199,6 @@ const App = () => {
       <GameplayArea
         activeGame={activeGame}
         currentGameId={currentGameId}
-        handleStartGameClick={createHandleStartGameClick(setActiveGame, gameApi.current)}
         handleSaveGameClick={createHandleSaveGameClick(
           gameApi.current,
           savedGames,
@@ -222,7 +212,10 @@ const App = () => {
           gameApi.current,
           setCurrentGameId,
         )}
-        handleHomeClick={() => window.location.reload()}
+        handleHomeClick={() => {
+          setCurrentGameId('')
+          setActiveGame(undefined)
+        }}
       />
     </>
   )

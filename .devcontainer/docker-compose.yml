@@ -1,0 +1,8 @@
+services:
+  app:
+    image: node:20.15-alpine
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    ports:
+      - 8080:8080
