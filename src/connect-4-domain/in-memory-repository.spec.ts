@@ -42,55 +42,55 @@ describe('in-memory-repository', () => {
       const repository = new InMemoryRepository()
       expect(repository).toBeInstanceOf(InMemoryRepository)
     })
-    it('loads a previously saved game', () => {
+    it('loads a previously saved game', async () => {
       const repository = new InMemoryRepository()
       const persistentGame = createPersistentGame()
-      const gameId: GameUuid = repository.save(persistentGame)
+      const gameId: GameUuid = await repository.save(persistentGame)
 
-      expect(repository.load(gameId)).toMatchObject(persistentGame)
+      expect(await repository.load(gameId)).toMatchObject(persistentGame)
     })
-    it('returns undefined when loading a non-existent game', () => {
+    it('returns undefined when loading a non-existent game', async () => {
       const repository = new InMemoryRepository()
       const gameId = v4()
-      expect(repository.load(gameId)).toBe(undefined)
+      expect(await repository.load(gameId)).toBe(undefined)
     })
   })
   describe('given a store', () => {
-    it('saves a game', () => {
+    it('saves a game', async () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
       const persistentGame = createPersistentGame()
-      const gameId = repository.save(persistentGame)
+      const gameId = await repository.save(persistentGame)
       expect(store.get(gameId)).toMatchObject(persistentGame)
     })
-    it('saves a game with a provided uuid', () => {
+    it('saves a game with a provided uuid', async () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
       const persistentGame = createPersistentGame()
       const gameId: GameUuid = v4()
-      const retrievedBoardId = repository.save(persistentGame, gameId)
+      const retrievedBoardId = await repository.save(persistentGame, gameId)
       expect(retrievedBoardId).toEqual(gameId)
       expect(store.get(gameId)).toMatchObject(persistentGame)
     })
-    it('loads a game', () => {
+    it('loads a game', async () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
       const persistentGame = createPersistentGame()
-      const gameId: GameUuid = repository.save(persistentGame)
-      expect(repository.load(gameId)).toMatchObject(persistentGame)
+      const gameId: GameUuid = await repository.save(persistentGame)
+      expect(await repository.load(gameId)).toMatchObject(persistentGame)
     })
-    it('returns undefined when loading a non-existent game', () => {
+    it('returns undefined when loading a non-existent game', async () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
       const gameId = v4()
-      expect(repository.load(gameId)).toBe(undefined)
+      expect(await repository.load(gameId)).toBe(undefined)
     })
-    it('deletes a saved game', () => {
+    it('deletes a saved game', async () => {
       const repository = new InMemoryRepository()
-      const gameId = repository.save(createPersistentGame())
-      const wasDeleted = repository.delete(gameId)
+      const gameId = await repository.save(createPersistentGame())
+      const wasDeleted = await repository.delete(gameId)
       expect(wasDeleted).toEqual(true)
-      expect(repository.load(gameId)).toEqual(undefined)
+      expect(await repository.load(gameId)).toEqual(undefined)
     })
   })
 })

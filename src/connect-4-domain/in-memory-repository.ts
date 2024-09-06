@@ -10,17 +10,17 @@ class InMemoryRepository implements GameRepository {
     this.store = store
   }
 
-  save(persistentGame: PersistentGame, gameUuid: GameUuid = v4()): GameUuid {
-    this.store.set(gameUuid, persistentGame)
+  async save(persistentGame: PersistentGame, gameUuid: GameUuid = v4()): Promise<GameUuid> {
+    await this.store.set(gameUuid, persistentGame)
     return gameUuid
   }
 
-  load(gameId: GameUuid): PersistentGame | undefined {
-    return this.store.get(gameId)
+  async load(gameId: GameUuid): Promise<PersistentGame | undefined> {
+    return await this.store.get(gameId)
   }
 
-  delete(gameId: GameUuid): boolean {
-    return this.store.delete(gameId)
+  async delete(gameId: GameUuid): Promise<boolean> {
+    return await this.store.delete(gameId)
   }
 }
 

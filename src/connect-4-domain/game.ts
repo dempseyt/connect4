@@ -29,9 +29,9 @@ interface Game {
   getStatus: () => Status
   getActivePlayer: () => PlayerNumber
   move: (movePlayerCommand: MovePlayerCommand) => PlayerMoveFailedEvent | PlayerMovedEvent
-  save: () => GameUuid
-  load: (gameId: GameUuid) => void
-  delete: (gameId: GameUuid) => boolean
+  save: () => Promise<GameUuid>
+  load: (gameId: GameUuid) => Promise<void>
+  delete: (gameId: GameUuid) => Promise<boolean>
 }
 
 class GameFactory implements Game {
@@ -211,10 +211,10 @@ class GameFactory implements Game {
     this.status = Status.IN_PROGRESS
   }
 
-  save(): GameUuid {
+  async save() {
     const gameUuid = v4()
     if (this.repository !== undefined) {
-      this.repository?.save(
+      await this.repository?.save(
         {
           board: this.getBoard(),
           activePlayer: this.activePlayer,
@@ -227,8 +227,8 @@ class GameFactory implements Game {
     return gameUuid
   }
 
-  load(gameId: GameUuid) {
-    const gameStateToLoad = this.repository?.load(gameId)
+  async load(gameId: GameUuid) {
+    const gameStateToLoad = await this.repository?.load(gameId)
     if (gameStateToLoad !== undefined) {
       const { board, activePlayer, players, status } = gameStateToLoad
       this.board = board
@@ -240,8 +240,8 @@ class GameFactory implements Game {
     }
   }
 
-  delete(gameId: GameUuid) {
-    return this.repository?.delete(gameId)
+  async delete(gameId: GameUuid) {
+    return await this.repository?.delete(gameId)
   }
 }
 

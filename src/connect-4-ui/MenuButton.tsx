@@ -1,15 +1,23 @@
 import styled from 'styled-components'
 
 export type MenuButtonProps = {
-  text: string
+  text?: string
+  imageLink?: string
+  isActive?: boolean
   onClick?: React.MouseEventHandler
 }
 
-const StyledMenuButton = styled.button`
+const StyledImg = styled.img`
+  width: 40px;
+  height: 40px;
+`
+
+const StyledMenuButton = styled.button<{ $isActive: MenuButtonProps['isActive'] }>`
   font-family: 'BigBlueTerminal';
   font-size: 1rem;
   padding: 10px 20px;
   border-radius: 50px;
+  opacity: ${({ $isActive }) => ($isActive ? 1 : 0.5)};
 
   &:hover {
     cursor: pointer;
@@ -20,6 +28,10 @@ const StyledMenuButton = styled.button`
     transform: scale(0.97);
   }
 `
-export const MenuButton = ({ text, onClick }: MenuButtonProps) => {
-  return <StyledMenuButton onClick={onClick}>{text}</StyledMenuButton>
+export const MenuButton = ({ text, imageLink, onClick, isActive }: MenuButtonProps) => {
+  return (
+    <StyledMenuButton $isActive={isActive} onClick={onClick}>
+      {text === undefined ? <StyledImg alt="GitHub" src={imageLink} /> : text}
+    </StyledMenuButton>
+  )
 }

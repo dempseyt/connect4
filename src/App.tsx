@@ -6,6 +6,8 @@ import { GameplayArea } from '@/connect-4-ui/GameplayArea'
 import { MutableRefObject, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { GameUuid, Status } from './connect-4-domain/game-types'
+import InMemoryRepository from './connect-4-domain/in-memory-repository'
+import MongoRepository from './connect-4-domain/mongo-repository'
 import { LoadGameDialog } from './connect-4-ui/LoadGameDialog'
 import { Overlay } from './connect-4-ui/Overlay'
 import { SavedGame } from './connect-4-ui/SavedGame'
@@ -60,9 +62,12 @@ function createHandleSaveGameClick(
   setSaveGameOverlay: (saveGameOverlay: boolean) => void,
 ) {
   if (currentGameId === '') {
-    return function handleSaveGameClick() {
-      const gameId = gameApi.saveGame()
+    return async function handleSaveGameClick(
+      setIsSaveGameActive: (isSaveGameClick: boolean) => void,
+    ) {
+      const gameId = await gameApi.saveGame()
       setCurrentGameId(gameId)
+      setIsSaveGameActive(false)
       savedGames.current.push({
         gameId: gameId,
         date: new Date().toLocaleString(),
@@ -79,8 +84,8 @@ function createHandleLoadGameClick(
   setShowOverlay: (showOverlay: boolean) => void,
   setCurrentGameId: (currentGameId: string) => void,
 ) {
-  return function handleLoadGameClick() {
-    gameApi.loadGame(gameId)
+  return async function handleLoadGameClick() {
+    await gameApi.loadGame(gameId)
     updateGame(setActiveGame, gameApi)
     setShowOverlay(false)
     setCurrentGameId(gameId)
@@ -98,9 +103,10 @@ function createHandleRestartGameClick(
   gameApi: GameApi,
   setCurrentGameId: (currentGameId: string) => void,
 ) {
-  return function handleRestartGameClick() {
+  return function handleRestartGameClick(setIsSaveGameActive: (isSaveGameActive: boolean) => void) {
     gameApi.restartGame()
     updateGame(setActiveGame, gameApi)
+    setIsSaveGameActive(true)
     setCurrentGameId('')
   }
 }
@@ -130,6 +136,18 @@ function createHandleDeleteClick(
   }
 }
 
+function resolveGameFactoryConfiguration() {
+  const repository =
+    import.meta.env.VITE_REPOSITORY === 'mongo' ? new MongoRepository() : new InMemoryRepository()
+  return {
+    boardDimensions: {
+      rows: 6,
+      columns: 7,
+    },
+    repository,
+  }
+}
+
 const App = () => {
   const [activeGame, setActiveGame] = useState<{
     gameOverview: GameOverviewProps
@@ -138,7 +156,8 @@ const App = () => {
   const [showOverlay, setShowOverlay] = useState(false)
   const [saveGameOverlay, setSaveGameOverlay] = useState(false)
   const [currentGameId, setCurrentGameId] = useState('')
-  const game = useRef(new GameFactory())
+  const repository = resolveGameFactoryConfiguration()
+  const game = useRef(new GameFactory(repository))
   const gameApi = useRef(createGameApi(game.current))
   const savedGames: MutableRefObject<Array<{ gameId: GameUuid; date: string }>> = useRef([])
 

@@ -3,9 +3,9 @@ export type BoardCell = {
 }
 
 export interface GameRepository {
-  save: (persistentGame: PersistentGame, gameUuid?: GameUuid) => GameUuid
-  load: (gameId: GameUuid) => undefined | PersistentGame
-  delete: (gameId: GameUuid) => boolean
+  save: (persistentGame: PersistentGame, gameUuid?: GameUuid) => Promise<GameUuid>
+  load: (gameId: GameUuid) => Promise<undefined | PersistentGame>
+  delete: (gameId: GameUuid) => Promise<boolean>
 }
 
 export enum Status {

@@ -135,7 +135,7 @@ describe('game', () => {
     })
     describe('persisting a game', () => {
       describe('given a custom repository', () => {
-        it('saves the game', () => {
+        it('saves the game', async () => {
           const repository = new InMemoryRepository()
           const game = new GameFactory({ repository })
 
@@ -146,8 +146,8 @@ describe('game', () => {
             2: game.getPlayerStats(2),
           }
           const status = game.getStatus()
-          const gameId = game.save()
-          const persistentGame = repository.load(gameId)
+          const gameId = await game.save()
+          const persistentGame = await repository.load(gameId)
           expect(persistentGame).toMatchObject({
             board,
             activePlayer,
@@ -155,7 +155,7 @@ describe('game', () => {
             status,
           })
         })
-        it('loads a game', () => {
+        it('loads a game', async () => {
           const repository = new InMemoryRepository()
           const game = new GameFactory({ repository })
           const board = game.getBoard()
@@ -166,8 +166,8 @@ describe('game', () => {
           }
           const status = game.getStatus()
 
-          const gameId = game.save()
-          game.load(gameId)
+          const gameId = await game.save()
+          await game.load(gameId)
 
           expect(game.getBoard()).toEqual(board)
           expect(game.getActivePlayer()).toBe(activePlayer)
@@ -178,13 +178,13 @@ describe('game', () => {
           expect(game.getStatus()).toEqual(status)
         })
         describe('and an invalid game UUID', () => {
-          it('throws an error', () => {
+          it('throws an error', async () => {
             const repository = new InMemoryRepository()
             const game = new GameFactory({ repository })
             const invalidGameId = v4()
-            expect(() => {
-              game.load(invalidGameId)
-            }).toThrow('The provided game UUID is invalid.')
+            await expect(game.load(invalidGameId)).rejects.toThrow(
+              'The provided game UUID is invalid.',
+            )
           })
         })
       })
@@ -787,10 +787,10 @@ describe('game', () => {
   })
   describe('persisting a game', () => {
     describe('given defaults', () => {
-      it('saves and loads a game', () => {
+      it('saves and loads a game', async () => {
         const game = new GameFactory()
-        const gameId = game.save()
-        game.load(gameId)
+        const gameId = await game.save()
+        await game.load(gameId)
         expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
           "
           |---|---|---|---|---|---|---|
@@ -880,7 +880,7 @@ describe('game', () => {
       })
     })
     describe('deleting a saved game', () => {
-      it('returns true if the saved game successfully deleted', () => {
+      it('returns true if the saved game successfully deleted', async () => {
         const game = new GameFactory()
         game.move(
           createMovePlayerCommand({
@@ -891,13 +891,13 @@ describe('game', () => {
             },
           }),
         )
-        const gameId = game.save()
+        const gameId = await game.save()
 
-        expect(game.delete(gameId)).toEqual(true)
+        expect(await game.delete(gameId)).toEqual(true)
       })
-      it('returns false if given an invalid game id', () => {
+      it('returns false if given an invalid game id', async () => {
         const game = new GameFactory()
-        expect(game.delete(v4())).toEqual(false)
+        expect(await game.delete(v4())).toEqual(false)
       })
     })
   })

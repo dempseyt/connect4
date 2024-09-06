@@ -28,10 +28,10 @@ export interface GameApi {
   getRemainingDisks: (player: Player) => number
   getGameStatus: () => Status
   getBoard: () => Array<Array<BoardCell>>
-  saveGame: () => GameUuid
-  loadGame: (gameId: GameUuid) => void
+  saveGame: () => Promise<GameUuid>
+  loadGame: (gameId: GameUuid) => Promise<void>
   restartGame: () => void
-  deleteGame: (gameId: GameUuid) => boolean
+  deleteGame: (gameId: GameUuid) => Promise<boolean>
 }
 
 const createRowMapper =
@@ -71,18 +71,18 @@ export function createGameApi(game: GameFactory): GameApi {
       const uiBoard: Array<Array<BoardCell>> = gameBoard.map(rowMapper)
       return uiBoard
     },
-    saveGame: () => {
-      const gameId = game.save()
+    saveGame: async () => {
+      const gameId = await game.save()
       return gameId
     },
-    loadGame: (gameId: GameUuid) => {
-      game.load(gameId)
+    loadGame: async (gameId: GameUuid) => {
+      await game.load(gameId)
     },
     restartGame: () => {
       game.restartGame()
     },
-    deleteGame: (gameId: GameUuid) => {
-      return game.delete(gameId)
+    deleteGame: async (gameId: GameUuid) => {
+      return await game.delete(gameId)
     },
   }
   return gameApi

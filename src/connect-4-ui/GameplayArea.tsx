@@ -1,5 +1,6 @@
 import { Board, BoardProps } from '@/connect-4-ui/Board'
 import { GameOverview, GameOverviewProps } from '@/connect-4-ui/GameOverview'
+import { useState } from 'react'
 import styled from 'styled-components'
 import { v4 } from 'uuid'
 import { GamePlayAreaMenu } from './GamePlayAreaMenu'
@@ -11,9 +12,9 @@ export type GameplayAreaProps = {
     board: BoardProps
   }
   currentGameId?: string
-  handleSaveGameClick?: () => void
+  handleSaveGameClick?: (setIsSaveActiveGame: (isSaveGameClick: boolean) => void) => void
   handleLoadGamesDialogClick?: () => void
-  handleRestartGameClick?: () => void
+  handleRestartGameClick?: (setIsSaveActiveGame: (isSaveGameClick: boolean) => void) => void
   handleHomeClick?: () => void
 }
 
@@ -82,6 +83,7 @@ const StyledButton = styled.button`
 const StyledMenuButtons = styled.div`
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 `
 
 const StyledGameId = styled.h3`
@@ -89,6 +91,10 @@ const StyledGameId = styled.h3`
   color: aqua;
   font-size: 0.7rem;
   padding-left: 8px;
+`
+
+const StyledLink = styled.a`
+  cursor: pointer;
 `
 
 const handleSourceCodeClick = () => {
@@ -103,15 +109,25 @@ export const GameplayArea = ({
   handleRestartGameClick = () => {},
   handleHomeClick = () => {},
 }: GameplayAreaProps) => {
+  const [isSaveGameActive, setIsSaveGameActive] = useState(true)
   return (
     <>
       <GamePlayAreaMenu>
-        <StyledSmallTitle>Connect4</StyledSmallTitle>
+        <StyledLink onClick={handleHomeClick}>
+          <StyledSmallTitle>Connect4</StyledSmallTitle>
+        </StyledLink>
         <StyledMenuButtons>
-          <MenuButton text={'Home'} onClick={handleHomeClick} />
-          <MenuButton text={'Save Game'} onClick={handleSaveGameClick} />
-          <MenuButton text={'Load Game'} onClick={handleLoadGamesDialogClick} />
-          <MenuButton text={'Source Code'} onClick={handleSourceCodeClick} />
+          <MenuButton
+            text={'Save Game'}
+            isActive={isSaveGameActive}
+            onClick={() => handleSaveGameClick(setIsSaveGameActive)}
+          />
+          <MenuButton text={'Load Game'} isActive={true} onClick={handleLoadGamesDialogClick} />
+          <MenuButton
+            imageLink={'https://cdn-icons-png.flaticon.com/512/25/25231.png'}
+            onClick={handleSourceCodeClick}
+            isActive={true}
+          />
         </StyledMenuButtons>
       </GamePlayAreaMenu>
       <StyledGameplayArea $activeGame={activeGame}>
@@ -122,14 +138,18 @@ export const GameplayArea = ({
                 Game ID: {currentGameId === '' ? 'No Game ID for current game' : currentGameId}
               </StyledGameId>
               <GameOverview {...activeGame.gameOverview} />
-              <StyledButton onClick={handleRestartGameClick}>New Game</StyledButton>
+              <StyledButton onClick={() => handleRestartGameClick(setIsSaveGameActive)}>
+                New Game
+              </StyledButton>
             </StyledGameInformation>
             <Board {...activeGame.board} key={v4()} />
           </StyledActiveGame>
         ) : (
           <StyledStartGameContainer>
             <StyledTitle>Connect4</StyledTitle>
-            <StyledButton onClick={handleRestartGameClick}>Start Game...</StyledButton>
+            <StyledButton onClick={() => handleRestartGameClick(setIsSaveGameActive)}>
+              Start Game...
+            </StyledButton>
           </StyledStartGameContainer>
         )}
       </StyledGameplayArea>
