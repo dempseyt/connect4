@@ -1,7 +1,7 @@
 {
-  "name": "connect4-app",
-  "service": "app",
-  "workspaceFolder": "/workspaces/${workspaceFolderBasename}",
+  "name": "connect-4",
   "dockerComposeFile": "docker-compose.yml",
-  "forwardPorts": [8080]
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "overrideCommand": true
 }

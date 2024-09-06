@@ -1,8 +1,30 @@
 services:
   app:
-    image: node:20.15-alpine
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
+
     ports:
-      - 8080:8080
+      - 3000:80
+    environment:
+      - REPOSITORY=production
+
+  db:
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - 5432:27017
+    volumes:
+      - mongodb-data:/data/db
+
+    # Uncomment to change startup options
+    # environment:
+    #  MONGO_INITDB_ROOT_USERNAME: root
+    #  MONGO_INITDB_ROOT_PASSWORD: example
+    #  MONGO_INITDB_DATABASE: your-database-here
+
+    # Add "forwardPorts": ["27017"] to **devcontainer.json** to forward MongoDB locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+volumes:
+  mongodb-data:
